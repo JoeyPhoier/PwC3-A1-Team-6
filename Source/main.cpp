@@ -22,40 +22,75 @@
 ********************************************************************************************/
 
 #include "raylib.h"
+#include <iostream>
 
 //------------------------------------------------------------------------------------
 // Program main entry point
 //------------------------------------------------------------------------------------
+
+class Player {
+    Vector2 pos;
+};
+
+class Stage {
+public:
+    int groundscroll=0;
+    int backgroundscroll=0;
+};
+
+Stage stage1;
+
+
 int main(void)
 {
+
     // Initialization
     //--------------------------------------------------------------------------------------
-    const int screenWidth = 800;
-    const int screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+    const int appWidth = 800;
+    const int appHeight = 450;
+
+    InitWindow(appWidth, appHeight, "Team 6 - Temp Title");
+
+    Image test = LoadImage("assets/test.png");
+    Texture2D groundtexture = LoadTexture("assets/ground.png");
+    SetWindowIcon(test);
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
-
+    
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
-        // Update
-        //----------------------------------------------------------------------------------
-        // TODO: Update your variables here
-        //----------------------------------------------------------------------------------
-
-        // Draw
-        //----------------------------------------------------------------------------------
+        if ( IsKeyPressed(KEY_F11) || (IsKeyPressed(KEY_ENTER) && (IsKeyDown(KEY_LEFT_ALT) || IsKeyDown(KEY_RIGHT_ALT)))) {
+            int currDisplay = GetCurrentMonitor();
+            
+            if (!IsWindowFullscreen()) {
+                SetWindowMonitor(currDisplay);
+                ToggleFullscreen();
+            }
+            else {
+                ToggleFullscreen();
+                const int monitorWidth = GetMonitorWidth(currDisplay);
+                const int monitorHeight = GetMonitorHeight(currDisplay);
+                SetWindowSize(appWidth, appHeight);
+                SetWindowPosition((monitorWidth - appWidth) / 2, (monitorHeight - appHeight) / 2);
+            }
+            
+        }
+        stage1.groundscroll-= 3;
+        if (stage1.groundscroll <= -groundtexture.width) stage1.groundscroll = 0;
+        
         BeginDrawing();
-
+        
         ClearBackground(RAYWHITE);
-
-        DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+        DrawTexture(groundtexture, stage1.groundscroll, 0, WHITE);
+        DrawTexture(groundtexture, groundtexture.width + stage1.groundscroll, 0, WHITE);
+        
+        //DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
 
         EndDrawing();
-        //----------------------------------------------------------------------------------
+        
     }
 
     // De-Initialization

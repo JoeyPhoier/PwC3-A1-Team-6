@@ -28,38 +28,6 @@
 // Program main entry point
 //------------------------------------------------------------------------------------
 
-class Player {
-    Vector2 pos;
-};
-
-class Stage {
-public:
-    int groundscroll=0;
-    int backgroundscroll=0;
-};
-
-class Entity {
-public:
-    int health = 0;
-    Vector2 pos = { 0,0 };
-    Vector2 speed = { 0,0 };
-    Vector2 accel = { 0,0 };
-    const Vector2 maxaccel = { 3,3 };
-    const Vector2 maxspeed = { 40,50 };
-
-    void movement(){
-        speed.x += accel.x;
-        if (speed.x > maxspeed.x)speed.x = maxspeed.x;
-        else if (speed.x < -maxspeed.x)speed.x = -maxspeed.x;
-        speed.y += accel.y;
-        pos.x += speed.x;
-        pos.y += speed.y;
-    }
-};
-
-Stage stage1;
-
-void PlayerInput(Entity* player);
 
 int main(void)
 {
@@ -78,7 +46,6 @@ int main(void)
 
     SetTargetFPS(60);
 
-    Entity Rob;
     //--------------------------------------------------------------------------------------
     
     // Main game loop
@@ -100,27 +67,13 @@ int main(void)
             }
             
         }
-        stage1.groundscroll-= 10;
-        if (stage1.groundscroll <= -groundtexture.width) stage1.groundscroll = 0;
-
-        PlayerInput(&Rob);
 
         
         BeginDrawing();
         
         ClearBackground(RAYWHITE);
         
-
-        Rectangle source = { Rob.pos.x, 0, groundtexture.width, groundtexture.height };
-        Rectangle dest = { 0, 680 * (GetScreenHeight() / 1080.0f), (GetScreenWidth() / 1920.0f) * groundtexture.width, (GetScreenHeight() / 1080.0f) * groundtexture.height};
-
-        DrawTexturePro(groundtexture, source, dest, Vector2{0,0}, 0, WHITE);
-
-
-        //DrawTexture(groundtexture, stage1.groundscroll, 0, WHITE);
-        //DrawTexture(groundtexture, groundtexture.width + stage1.groundscroll, 0, WHITE);
-        
-        //DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+        DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
 
         EndDrawing();
         
@@ -132,30 +85,4 @@ int main(void)
     //--------------------------------------------------------------------------------------
 
     return 0;
-}
-
-void PlayerInput(Entity* player){
-    if (IsKeyDown(KEY_A) && !IsKeyDown(KEY_D)) {
-        player->accel.x = -player->maxaccel.x;
-        if (player->speed.x > player->maxspeed.x * .35) player->speed.x = -player->maxspeed.x * .35;
-    }
-    else if (IsKeyDown(KEY_D) && !IsKeyDown(KEY_A)) {
-        player->accel.x = player->maxaccel.x;
-        if (player->speed.x < -player->maxspeed.x * .35) player->speed.x = player->maxspeed.x * .35;
-    }
-    else {
-        if (player->speed.x > 0)
-        {
-            if (player->maxaccel.x/2 > player->speed.x)player->accel.x = -player->speed.x;
-            else player->accel.x = -player->maxaccel.x / 2;
-
-        }
-        else if (player->speed.x < 0)
-        {
-            if (player->maxaccel.x / 2 > -player->speed.x)player->accel.x = -player->speed.x;
-            else player->accel.x = player->maxaccel.x / 2;
-        }
-        else player->accel.x = 0;
-    }
-    player->movement();
 }

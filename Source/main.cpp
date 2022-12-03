@@ -25,6 +25,7 @@
 #include <iostream>
 #include "JCC_tools.h"
 #include "Inventory.h"
+#include "map.h"
 
 
 //----------------------------------------------------------------------------------
@@ -84,6 +85,9 @@ int main(void)
 
     SetWindowIcon(test);
 
+    Map map;
+    
+
     SetTargetFPS(60);
 
     //--------------------------------------------------------------------------------------
@@ -127,10 +131,10 @@ int main(void)
         BeginMode2D(camera);
         
         ClearBackground(RAYWHITE);
-        DrawTexture(grid2D, 0, 0, WHITE);
+        map.render(&camera);
         DrawRectangle(player.position.x-10.0f, player.position.y-10.0f, 20,20, RED);
 
-        BeginMode2D(camera);
+        EndMode2D();
         EndDrawing();
         
     }

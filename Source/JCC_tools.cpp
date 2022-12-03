@@ -6,11 +6,19 @@ void jccDrawTexture(Texture2D texture, int width, int y) {
 
 }
 
+float jccTruncate(float number, int digitsAfterZero) {
+	int scaler = 1;
+	for (int i = 0; i < digitsAfterZero; i++) {
+		scaler *= 10;
+	}
+	number = (trunc(number * scaler)) / scaler;
+	return number;
+}
 
 Vector2 NormalVect(Vector2 vector) {
 	float length = sqrt((vector.x * vector.x) + (vector.y * vector.y));
-	vector.x = vector.x / length;
-	vector.y = vector.y / length;
+	vector.x = jccTruncate(vector.x / length, 2);				//Truncation fixes the jitteryness.
+	vector.y = jccTruncate(vector.y / length, 2);
 	return vector;
 }
 

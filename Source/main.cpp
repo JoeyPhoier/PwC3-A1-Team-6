@@ -36,6 +36,7 @@ public:
     Vector2 position = Vector2(0, 0);
     Texture2D sprite;
     float walkingspeed = 5.0f;
+    Inventory inventory;
     
 };
 
@@ -45,15 +46,18 @@ public:
     int windowedHeight;
     int currWidth;
     int currHeight;
-    float unscalezoom;
+    float unscalezoom = 1.0f;
+    float maxzoom = 3.0f;
+    float minzoom = 0.25f;
 };
 
 //----------------------------------------------------------------------------------
 // Module functions declaration
 //----------------------------------------------------------------------------------
 
-void PlayerUpdate(Player* player);
-void CameraUpdate(Camera2D* camera, Player * player, Screen* screen);
+void PlayerUpdate(Player& player);
+void CameraUpdate(Camera2D& camera, Player& player, Screen& screen);
+void DrawGui(Screen& screen, Player& player);
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -66,12 +70,9 @@ int main(void)
     //--------------------------------------------------------------------------------------
 
     Screen screen{
-        screen.windowedWidth = 960,
-        screen.windowedHeight = 540,
+        .windowedWidth = 960,
+        .windowedHeight = 540,
     };
-    
-    screen.unscalezoom = 1.0f;
-
 
     InitWindow(screen.windowedWidth, screen.windowedHeight, "Team 6 - Temp Title");
 
@@ -91,10 +92,9 @@ int main(void)
     Camera2D camera = { 0 };
     Player player;
 
-    camera.zoom = 1.0f;
 
     
-   
+    player.inventory.AddItem(2,555);
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {   
@@ -120,17 +120,24 @@ int main(void)
 
         
 
-        PlayerUpdate(&player);
-        CameraUpdate(&camera, &player, &screen);
-        
+        PlayerUpdate(player);
+        CameraUpdate(camera, player, screen);
+
         BeginDrawing();
-        BeginMode2D(camera);
-        
         ClearBackground(RAYWHITE);
-        DrawTexture(grid2D, 0, 0, WHITE);
-        DrawRectangle(player.position.x-10.0f, player.position.y-10.0f, 20,20, RED);
+
 
         BeginMode2D(camera);
+
+        DrawTexture(grid2D, 0, 0, WHITE);
+
+        DrawRectangle(player.position.x-10, player.position.y-10, 20,20, RED);
+
+        DrawRectangle(40, 40, 20, 20, DARKGRAY);
+
+        EndMode2D();
+
+        DrawGui(screen, player);
         EndDrawing();
         
     }
@@ -143,27 +150,66 @@ int main(void)
     return 0;
 }
 
-void PlayerUpdate(Player* player) {                                 //Could eventually add deltaTime if performance is affected
+void PlayerUpdate(Player& player) {                                 //Could eventually add deltaTime if performance is affected
     Vector2 movDir = Vector2(0, 0);                                 //Have to test whether local var and player stored var with
     if (IsKeyDown(KEY_A)) movDir.x--;                               //point lookup is more efficient.
     if (IsKeyDown(KEY_D)) movDir.x++;
     if (IsKeyDown(KEY_W)) movDir.y--;
     if (IsKeyDown(KEY_S)) movDir.y++;
     if (movDir.x != 0 || movDir.y != 0) {
-        movDir = NormalVect(movDir);
-        player->position.x += movDir.x * player->walkingspeed;
-        player->position.y += movDir.y * player->walkingspeed;
+        NormalVect(movDir);                            
+        player.position.x += movDir.x * player.walkingspeed;
+        player.position.y += movDir.y * player.walkingspeed;
     }
+
+    if (IsKeyPressed(KEY_ONE)) player.inventory.selectedIndex = 0;
+    else if (IsKeyPressed(KEY_TWO)) player.inventory.selectedIndex = 1;
+    else if (IsKeyPressed(KEY_THREE)) player.inventory.selectedIndex = 2;
+    else if (IsKeyPressed(KEY_FOUR)) player.inventory.selectedIndex = 3;
+    else if (IsKeyPressed(KEY_FIVE)) player.inventory.selectedIndex = 4;
+    else if (IsKeyPressed(KEY_SIX)) player.inventory.selectedIndex = 5;
+    else if (IsKeyPressed(KEY_SEVEN)) player.inventory.selectedIndex = 6;
+    else if (IsKeyPressed(KEY_EIGHT)) player.inventory.selectedIndex = 7;
+    else if (IsKeyPressed(KEY_NINE)) player.inventory.selectedIndex = 8;
+    else if (IsKeyPressed(KEY_ZERO)) player.inventory.selectedIndex = 9;
+
+    player.inventory.selectedIndex += GetMouseWheelMove();          //Probably needs some smoothing
+    if (player.inventory.selectedIndex > 9) player.inventory.selectedIndex = 0;
+    else if (player.inventory.selectedIndex < 0) player.inventory.selectedIndex = 9;
 }
 
-void CameraUpdate(Camera2D* camera, Player* player, Screen* screen) {
-    camera->offset = Vector2(screen->currWidth/2, screen->currHeight / 2);
-    camera->target = player->position;
-            
-    screen->unscalezoom += (GetMouseWheelMove() * 0.05f);
-    float screenscale = (screen->currWidth / screen->windowedWidth);
-    if (screen->unscalezoom > 3.0f) screen->unscalezoom = 3.0f;
-    else if (screen->unscalezoom < 0.25f) screen->unscalezoom = 0.25f;
+void CameraUpdate(Camera2D& camera, Player& player, Screen& screen) {
+    camera.offset = Vector2(screen.currWidth/2, screen.currHeight / 2);
+    camera.target = player.position;
+    
+    if(IsKeyDown(KEY_LEFT_CONTROL)) screen.unscalezoom += (GetMouseWheelMove() * 0.05f);
+    float screenscale = (screen.currWidth / screen.windowedWidth);
+    if (screen.unscalezoom > screen.maxzoom) screen.unscalezoom = screen.maxzoom;
+    else if (screen.unscalezoom < screen.minzoom) screen.unscalezoom = screen.minzoom;
 
-    camera->zoom = screen->unscalezoom * screenscale;
+    camera.zoom = screen.unscalezoom * screenscale;               //Breaking down zoom into unscale zoom and screenscale ensures
+}                                                                 //the same viewport is rendered independant of window size.
+
+void DrawGui(Screen& screen, Player& player) {
+    for(int i = 0; i < 10; i++) {
+        if (player.inventory.selectedIndex == i) {
+            DrawRectangle(screen.currWidth / 2 + (60 * i) - 295, screen.currHeight - 60, 50, 50, ORANGE);
+            DrawRectangle(screen.currWidth / 2 + (60 * i) - 290, screen.currHeight - 55, 40, 40, BROWN);
+        }   
+        else{
+            DrawRectangle(screen.currWidth / 2 + (60 * i) - 295, screen.currHeight - 60, 50, 50, BROWN);
+            DrawRectangle(screen.currWidth / 2 + (60 * i) - 290, screen.currHeight - 55, 40, 40, DARKBROWN);
+        }
+        if (player.inventory.slot[i] != nullptr) {
+            DrawTexture(player.inventory.slot[i]->sprite, screen.currWidth / 2 + (60 * i) - 290, screen.currHeight - 55, WHITE);
+            if (player.inventory.slot[i]->currStack > 1) {
+                int spacing = 0;                                //Might be better to show text as img, in order to indent it to the right.
+                if (player.inventory.slot[i]->currStack > 100) spacing = 2;     //Using log() would make the code simpler, but slower.
+                else if (player.inventory.slot[i]->currStack > 10) spacing = 1;
+                DrawText(TextFormat("%i", player.inventory.slot[i]->currStack),screen.currWidth / 2 + (60 * i) - 259 - (7 * spacing), screen.currHeight - 28, 12, WHITE);
+            }
+        }
+    }
+   
+
 }

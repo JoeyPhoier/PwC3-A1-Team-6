@@ -5,4 +5,4 @@
 
 Vector2 NormalVect(Vector2 vector);
 
-Vector2 NormalVect(int x, int y);
+Vector2 NormalVect(float x, float y);

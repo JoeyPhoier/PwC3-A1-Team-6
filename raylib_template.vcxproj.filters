@@ -21,15 +21,15 @@
     <ClCompile Include="Source\JCC_tools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Inventory.cpp">
+    <ClCompile Include="Source\Inventory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="JCC_tools.h">
+    <ClInclude Include="Source\Inventory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Inventory.h">
+    <ClInclude Include="Source\JCC_tools.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

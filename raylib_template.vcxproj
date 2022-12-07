@@ -132,10 +132,8 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
-
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -167,13 +165,13 @@
     <ClCompile Include="Source\JCC_tools.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\map.cpp" />
+    <ClCompile Include="Source\player.cpp" />
   </ItemGroup>
   <ItemGroup>
-
     <ClInclude Include="Source\Inventory.h" />
     <ClInclude Include="Source\JCC_tools.h" />
     <ClInclude Include="Source\map.h" />
-
+    <ClInclude Include="Source\player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -18,7 +18,8 @@ public:
     Color groundTint = WHITE;
 
     bool hasTree = false;
-    bool canBePlantedOn = false;
+    bool canBeTilled = false;
+    bool isTilled = false;
     bool isWet = false;
 
 };

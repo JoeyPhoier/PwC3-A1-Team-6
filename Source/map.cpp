@@ -8,23 +8,12 @@ Map::Map() {
 	for (int i = 0; i < tilesX * tilesY; ++i) {
 		Tile newTile;
 		int random = GetRandomValue(0, 10);      // Temporary world generation, should be changed
-		if (random > 6) {
-			newTile.groundSource = DIRT;
-			newTile.canBePlantedOn = true;
-		}
-		else if (random > 1) {
+		if (random > 1) {
 			newTile.groundSource = GRASS;
+			newTile.canBeTilled = true;
 		}
 		else {
 			newTile.groundSource = WATER;
-		}
-
-		if (random == 2) {
-			newTile.hasTree = true;
-		}
-		else if (random == 10) {
-			newTile.groundTint = LIGHTGRAY;
-			newTile.isWet = true;
 		}
 
 		tiles.push_back(newTile);

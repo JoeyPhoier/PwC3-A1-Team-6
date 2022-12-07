@@ -26,20 +26,14 @@
 #include "JCC_tools.h"
 #include "Inventory.h"
 #include "map.h"
+#include "player.h"
 
 
 //----------------------------------------------------------------------------------
 // Custom Classes declaration
 //----------------------------------------------------------------------------------
 
-class Player {
-public:
-    Vector2 position = Vector2(0, 0);
-    Texture2D sprite;
-    float walkingspeed = 5.0f;
-    Inventory inventory;
-    
-};
+
 
 class Screen {
 public:
@@ -56,7 +50,7 @@ public:
 // Module functions declaration
 //----------------------------------------------------------------------------------
 
-void PlayerUpdate(Player& player);
+void PlayerUpdate(Player& player, Map& map, Camera2D& camera);
 void CameraUpdate(Camera2D& camera, Player& player, Screen& screen);
 void DrawGui(Screen& screen, Player& player);
 
@@ -96,9 +90,13 @@ int main(void)
     Camera2D camera = { 0 };
     Player player;
 
+    player.inventory.AddItem(201);
+    player.inventory.AddItem(202);
+    player.inventory.AddItem(2, 5);
+    player.inventory.AddItem(102, 10);
 
-    
-    player.inventory.AddItem(2,555);
+
+
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {   
@@ -124,29 +122,20 @@ int main(void)
 
         
 
-        PlayerUpdate(player);
+        PlayerUpdate(player, map, camera);
         CameraUpdate(camera, player, screen);
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
-
-
         BeginMode2D(camera);
 
-        DrawTexture(grid2D, 0, 0, WHITE);
-
-        DrawRectangle(player.position.x-10, player.position.y-10, 20,20, RED);
         map.render(&camera);
+        DrawRectangle(player.position.x-10, player.position.y-10, 20,20, RED);
         
         EndMode2D();
 
         DrawGui(screen, player);
-
-        
-        
-
-        EndMode2D();
 
         EndDrawing();
         
@@ -160,12 +149,12 @@ int main(void)
     return 0;
 }
 
-void PlayerUpdate(Player& player) {                                 //Could eventually add deltaTime if performance is affected
+void PlayerUpdate(Player& player, Map& map, Camera2D& camera) {     //Could eventually add deltaTime if performance is affected
     Vector2 movDir = Vector2(0, 0);                                 //Have to test whether local var and player stored var with
-    if (IsKeyDown(KEY_A)) movDir.x--;                               //point lookup is more efficient.
-    if (IsKeyDown(KEY_D)) movDir.x++;
-    if (IsKeyDown(KEY_W)) movDir.y--;
-    if (IsKeyDown(KEY_S)) movDir.y++;
+    if (IsKeyDown(KEY_A)) { movDir.x--; player.facingDir = Left; }  //point lookup is more efficient.
+    if (IsKeyDown(KEY_D)) { movDir.x++; player.facingDir = Right; }
+    if (IsKeyDown(KEY_W)) { movDir.y--; player.facingDir = Up; }
+    if (IsKeyDown(KEY_S)) { movDir.y++; player.facingDir = Down; }
     if (movDir.x != 0 || movDir.y != 0) {
         NormalVect(movDir);                            
         player.position.x += movDir.x * player.walkingspeed;
@@ -183,7 +172,19 @@ void PlayerUpdate(Player& player) {                                 //Could even
     else if (IsKeyPressed(KEY_NINE)) player.inventory.selectedIndex = 8;
     else if (IsKeyPressed(KEY_ZERO)) player.inventory.selectedIndex = 9;
 
-    player.inventory.selectedIndex += GetMouseWheelMove();          //Probably needs some smoothing
+    if (IsMouseButtonPressed(0)) {
+        if (player.inventory.slot[player.inventory.selectedIndex]) {
+            player.inventory.slot[player.inventory.selectedIndex]->UseItem(camera, map, player.facingDir);
+            if (player.inventory.slot[player.inventory.selectedIndex]->currStack == 0) {
+                delete player.inventory.slot[player.inventory.selectedIndex];
+                player.inventory.slot[player.inventory.selectedIndex] = nullptr;
+            }
+
+
+        }
+    }
+
+    if(IsKeyUp(KEY_LEFT_CONTROL)) player.inventory.selectedIndex -= GetMouseWheelMove();  //Probably needs some smoothing
     if (player.inventory.selectedIndex > 9) player.inventory.selectedIndex = 0;
     else if (player.inventory.selectedIndex < 0) player.inventory.selectedIndex = 9;
 }
@@ -198,7 +199,7 @@ void CameraUpdate(Camera2D& camera, Player& player, Screen& screen) {
     else if (screen.unscalezoom < screen.minzoom) screen.unscalezoom = screen.minzoom;
 
     camera.zoom = screen.unscalezoom * screenscale;               //Breaking down zoom into unscale zoom and screenscale ensures
-}                                                                 //the same viewport is rendered independant of window size.
+}                                                                 //the same viewport is rendered independent of window size.
 
 void DrawGui(Screen& screen, Player& player) {
     for(int i = 0; i < 10; i++) {

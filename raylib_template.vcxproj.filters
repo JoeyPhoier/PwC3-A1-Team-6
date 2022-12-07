@@ -24,12 +24,24 @@
     <ClCompile Include="Source\Inventory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Inventory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\JCC_tools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

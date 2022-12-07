@@ -133,26 +133,34 @@ int TileIndex(Camera2D& camera, Map& map, int facingDir, bool canTargetCurrTile 
 	else return (tileCoorX + tileCoorY * map.tilesX);
 }
 
-bool HoeClass::UseItem(Camera2D& camera, Map& map, int facingDir){		//Hoes,Picks and axes cannot target the player tile.
-	int tileIndex = TileIndex(camera, map, facingDir);
-	//Insert tool effects on tile here
-	if (tileIndex == -1) return false;
-	if (map.tiles[tileIndex].canBeTilled) {
-		map.tiles[tileIndex].isTilled = true;
-		map.tiles[tileIndex].groundSource = Rectangle(6 * map.tileSize, map.tileSize, map.tileSize, map.tileSize);
-	}
+bool SeedClass::UseItem(Camera2D& camera, Map& map, int facingDir) {
+	int tileIndex = TileIndex(camera, map, facingDir, true);
+	if (tileIndex == -1 || !map.tiles[tileIndex].isTilled) return false;
+
+	currStack--;
+	//instantiate plant entity at map[tileIndex]
+
+	return true;
 	
+}
+
+bool HoeClass::UseItem(Camera2D& camera, Map& map, int facingDir) {		//Hoes,Picks and axes cannot target the player tile.
+	int tileIndex = TileIndex(camera, map, facingDir);
+	if (tileIndex == -1 || !map.tiles[tileIndex].canBeTilled) return false;
+
+	map.tiles[tileIndex].isTilled = true;
+	map.tiles[tileIndex].groundSource = Rectangle(6 * map.tileSize, map.tileSize, map.tileSize, map.tileSize);
 
 	return true;
 }
 
 bool WateringCanClass::UseItem(Camera2D& camera, Map& map, int facingDir) {
-	int tileIndex = TileIndex(camera, map, facingDir);
-	if (tileIndex == -1) return false;
-	if (map.tiles[tileIndex].isTilled) {
-		map.tiles[tileIndex].isWet = true;
-		map.tiles[tileIndex].groundTint = GRAY;
-	}
+	int tileIndex = TileIndex(camera, map, facingDir, true);
+	if (tileIndex == -1 || !map.tiles[tileIndex].isTilled) return false;
+
+	map.tiles[tileIndex].isWet = true;
+	map.tiles[tileIndex].groundTint = GRAY;
+
 	return true;
 };
 

@@ -35,7 +35,6 @@ public:												//that holds both the in-inventory sprite and the overworld s
 	}
 
 	virtual bool UseItem(Camera2D& camera, Map& map, int facingDir) {
-		if (currStack = 0) return false;
 		currStack--;
 		return true;
 	};
@@ -56,6 +55,7 @@ public:
 		type = Seed;
 	}
 	SeedClass(Item& item) : Item(item) { type = Seed; }
+	bool UseItem(Camera2D& camera, Map& map, int facingDir);
 };
 
 class ToolClass : public Item {

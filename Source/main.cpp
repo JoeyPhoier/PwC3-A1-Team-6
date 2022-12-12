@@ -53,6 +53,7 @@ public:
 void PlayerUpdate(Player& player, Map& map, Camera2D& camera);
 void CameraUpdate(Camera2D& camera, Player& player, Screen& screen);
 void DrawGui(Screen& screen, Player& player);
+void RenderPlayer(Player& player);
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -119,7 +120,6 @@ int main(void)
             }
             
         }
-
         
 
         PlayerUpdate(player, map, camera);
@@ -131,8 +131,8 @@ int main(void)
         BeginMode2D(camera);
 
         map.render(&camera);
-        DrawRectangle(player.position.x-10, player.position.y-10, 20,20, RED);
-        
+        //DrawRectangle(player.position.x-10, player.position.y-10, 20,20, RED);
+        RenderPlayer(player);
         EndMode2D();
 
         DrawGui(screen, player);
@@ -149,17 +149,9 @@ int main(void)
     return 0;
 }
 
-void PlayerUpdate(Player& player, Map& map, Camera2D& camera) {     //Could eventually add deltaTime if performance is affected
-    Vector2 movDir = Vector2(0, 0);                                 //Have to test whether local var and player stored var with
-    if (IsKeyDown(KEY_A)) { movDir.x--; player.facingDir = Left; }  //point lookup is more efficient.
-    if (IsKeyDown(KEY_D)) { movDir.x++; player.facingDir = Right; }
-    if (IsKeyDown(KEY_W)) { movDir.y--; player.facingDir = Up; }
-    if (IsKeyDown(KEY_S)) { movDir.y++; player.facingDir = Down; }
-    if (movDir.x != 0 || movDir.y != 0) {
-        NormalVect(movDir);                            
-        player.position.x += movDir.x * player.walkingspeed;
-        player.position.y += movDir.y * player.walkingspeed;
-    }
+void PlayerUpdate(Player& player, Map& map, Camera2D& camera) {
+
+    //First the functions that ignore "allowInput".
 
     if (IsKeyPressed(KEY_ONE)) player.inventory.selectedIndex = 0;
     else if (IsKeyPressed(KEY_TWO)) player.inventory.selectedIndex = 1;
@@ -171,6 +163,13 @@ void PlayerUpdate(Player& player, Map& map, Camera2D& camera) {     //Could even
     else if (IsKeyPressed(KEY_EIGHT)) player.inventory.selectedIndex = 7;
     else if (IsKeyPressed(KEY_NINE)) player.inventory.selectedIndex = 8;
     else if (IsKeyPressed(KEY_ZERO)) player.inventory.selectedIndex = 9;
+
+
+    if (IsKeyUp(KEY_LEFT_CONTROL)) player.inventory.selectedIndex -= GetMouseWheelMove();  //Probably needs some smoothing
+    if (player.inventory.selectedIndex > 9) player.inventory.selectedIndex = 0;
+    else if (player.inventory.selectedIndex < 0) player.inventory.selectedIndex = 9;
+
+    if (!player.allowInput) return; //Anything below this point will be skipped if mid animation.
 
     if (IsMouseButtonPressed(0)) {
         if (player.inventory.slot[player.inventory.selectedIndex]) {
@@ -184,9 +183,59 @@ void PlayerUpdate(Player& player, Map& map, Camera2D& camera) {     //Could even
         }
     }
 
-    if(IsKeyUp(KEY_LEFT_CONTROL)) player.inventory.selectedIndex -= GetMouseWheelMove();  //Probably needs some smoothing
-    if (player.inventory.selectedIndex > 9) player.inventory.selectedIndex = 0;
-    else if (player.inventory.selectedIndex < 0) player.inventory.selectedIndex = 9;
+    Vector2 movDir = Vector2(0, 0);                                 //Could eventually add deltaTime if performance is affected
+    if (IsKeyDown(KEY_A)) { movDir.x--; player.facingDir = Left; }  //Have to test whether local var and player stored var with
+    if (IsKeyDown(KEY_D)) { movDir.x++; player.facingDir = Right; } //point lookup is more efficient.
+    if (IsKeyDown(KEY_W)) { movDir.y--; player.facingDir = Up; }
+    if (IsKeyDown(KEY_S)) { movDir.y++; player.facingDir = Down; }
+    if (IsKeyUp(KEY_A) && IsKeyUp(KEY_S) && IsKeyUp(KEY_D) && IsKeyUp(KEY_W)) player.isMoving = false;
+    else player.isMoving = true;
+
+    if ((movDir.x != 0 || movDir.y != 0) && player.isMoving) {
+        NormalVect(movDir);                            
+        player.position.x += movDir.x * player.walkingspeed;
+        player.position.y += movDir.y * player.walkingspeed;
+    }
+    
+
+}
+
+void RenderPlayer(Player& player) {
+    if (player.isMoving && player.SpriteCont < 2) 
+    {
+        player.SpriteCont = 2;
+        player.animCont = player.animMax;
+    }
+    if (!player.isMoving && player.SpriteCont > 1)
+    {
+        player.SpriteCont = 0;
+        player.animCont = player.animMax;
+    }
+
+    if (player.animCont > 0) {
+        player.animCont--;
+        //std::cout << "animCont decrease" << std::endl;
+    }
+    else {
+
+        if (player.SpriteCont == 1) 
+        {
+            player.SpriteCont = 0;
+        }
+        else if (player.SpriteCont == 3) 
+        {
+            player.SpriteCont = 2;
+        }
+        else 
+        {
+            player.SpriteCont++;
+        }
+        player.animCont = player.animMax;
+    }
+
+    DrawTextureRec(player.spriteSheet, Rectangle{ player.SpriteCont*48,float(player.facingDir * 48),48,48 }, player.position, WHITE);
+    //render
+    
 }
 
 void CameraUpdate(Camera2D& camera, Player& player, Screen& screen) {

@@ -24,6 +24,9 @@
     <ClCompile Include="Source\Inventory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\entities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Source\map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\JCC_tools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\entities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\map.h">

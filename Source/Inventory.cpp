@@ -138,7 +138,7 @@ bool SeedClass::UseItem(Camera2D& camera, Map& map, int facingDir) {
 	if (tileIndex == -1 || !map.tiles[tileIndex].isTilled) return false;
 
 	currStack--;
-	//instantiate plant entity at map[tileIndex]
+	map.PlantSeed(tileIndex, id);
 
 	return true;
 	

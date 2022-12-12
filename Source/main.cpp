@@ -125,14 +125,20 @@ int main(void)
         PlayerUpdate(player, map, camera);
         CameraUpdate(camera, player, screen);
 
+        if (IsKeyPressed(KEY_U)) { // For testing
+            map.UpdateNewDay();
+        }
+
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
         BeginMode2D(camera);
 
-        map.render(&camera);
-        //DrawRectangle(player.position.x-10, player.position.y-10, 20,20, RED);
+        map.RenderGround(&camera);
+        map.RenderEntities(&camera);
+        DrawRectangle(player.position.x-10, player.position.y-10, 20,20, RED);
         RenderPlayer(player);
+
         EndMode2D();
 
         DrawGui(screen, player);

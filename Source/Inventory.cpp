@@ -114,22 +114,22 @@ int TileIndex(Camera2D& camera, Map& map, int facingDir, bool canTargetCurrTile 
 	}
 	else {
 		switch (facingDir) {
-		case(0):
+		case(2):
 			tileCoorX--;
 			break;
 		case(1):
 			tileCoorY--;
 			break;
-		case(2):
+		case(3):
 			tileCoorX++;
 			break;
-		case(3):
+		case(0):
 			tileCoorY++;
 			break;
 		}
 	}
 
-	if (tileCoorX > map.tilesX || tileCoorX < 0 || tileCoorY > map.tilesY || tileCoorY < 0) return -1;
+	if (tileCoorX >= map.tilesX || tileCoorX < 0 || tileCoorY >= map.tilesY || tileCoorY < 0) return -1;
 	else return (tileCoorX + tileCoorY * map.tilesX);
 }
 

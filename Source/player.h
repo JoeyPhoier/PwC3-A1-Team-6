@@ -16,8 +16,8 @@ public:
     int animCont = 0;
     bool allowInput = true;
     float SpriteCont = 0;
-    int animMax = 30;
-    Texture2D spriteSheet = LoadTexture("assets/Basic Character Spritesheet.png");
-    Rectangle renderRec = { 0, 0, 48, 48};
+    int animMax = 25;
+    Texture2D spriteSheet = LoadTexture("assets/Basic Character Spritesheet2.png");
+    float spriteSize = 72;
 
 };

@@ -136,7 +136,6 @@ int main(void)
 
         map.RenderGround(&camera);
         map.RenderEntities(&camera);
-        DrawRectangle(player.position.x-10, player.position.y-10, 20,20, RED);
         RenderPlayer(player);
 
         EndMode2D();
@@ -239,7 +238,7 @@ void RenderPlayer(Player& player) {
         player.animCont = player.animMax;
     }
 
-    DrawTextureRec(player.spriteSheet, Rectangle{ player.SpriteCont*48,float(player.facingDir * 48),48,48 }, player.position, WHITE);
+    DrawTextureRec(player.spriteSheet, Rectangle{ player.SpriteCont * player.spriteSize,float(player.facingDir * player.spriteSize),player.spriteSize,player.spriteSize }, Vector2{ player.position.x - player.spriteSize / 2,player.position.y - player.spriteSize * 0.9f }, WHITE);
     //render
     
 }

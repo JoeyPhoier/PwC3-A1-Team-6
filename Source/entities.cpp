@@ -3,14 +3,14 @@
 
 
 
-Plant::Plant(int idi, Texture2D* texturei) {
+Plant::Plant(int idi, Texture2D* spriteSheeti) {
 	switch (idi) {
 	case 101:
 
 		break;
 	case 102:
 		id = id;
-		texture = texturei;
+		spriteSheet = spriteSheeti;
 		textureSource = Rectangle(0, 64, 64, 64);
 		maxGrowthStage = 12;
 		break;
@@ -18,10 +18,6 @@ Plant::Plant(int idi, Texture2D* texturei) {
 
 		break;
 	}
-}
-
-void Plant::Update() {
-	return;
 }
 
 void Plant::UpdateNewDay() {
@@ -45,6 +41,24 @@ void Plant::UpdateNewDay() {
 	
 }
 
+void Plant::Interact() {
+	if (growthStage < maxGrowthStage) return;
+	// Remove plant entity and give the player the item
+}
+
 void Plant::Render() {
-	DrawTextureRec(*texture, textureSource, renderPos, WHITE);
+	DrawTextureRec(*spriteSheet, textureSource, renderPos, WHITE);
+}
+
+
+void Bed::UpdateNewDay() {
+	return;
+}
+
+void Bed::Interact() {
+	map->UpdateNewDay();
+}
+
+void Bed::Render() {
+	DrawTextureRec(*spriteSheet, textureSource, renderPos, WHITE);
 }

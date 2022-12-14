@@ -9,7 +9,11 @@ void Tile::UpdateNewDay() {
 	groundTint = WHITE;
 }
 
+void Tile::Interact() {
+	if (entity == nullptr) return;
+	entity->Interact();
 
+}
 
 
 
@@ -22,6 +26,10 @@ Map::Map() {
 	ImageResize(&tempImage, 320, 384);
 	plantSpriteSheet = LoadTextureFromImage(tempImage);
 	//plantSpriteSheet = LoadTexture("assets/plants_free.png");
+
+	tempImage = LoadImage("assets/Basic Furniture.png");
+	ImageResize(&tempImage, 576, 384);
+	furnitureSpriteSheet = LoadTextureFromImage(tempImage);
 
 	for (int i = 0; i < tilesX * tilesY; ++i) {
 		Tile newTile;
@@ -36,9 +44,19 @@ Map::Map() {
 
 		tiles.push_back(newTile);
 	}
+	
+	Bed newBed;
+	newBed.pos = Vector2(3 * tileSize, 3 * tileSize);
+	newBed.renderPos = Vector2(3 * tileSize, 2 * tileSize);
+	newBed.spriteSheet = &furnitureSpriteSheet;
+	newBed.parent = &tiles[3 * tilesX + 3];
+	newBed.map = this;
+	beds.push_back(newBed);
+	entities.push_back(&beds.back());
 
-	Tile newTile{ .groundSource = GRASS, .canBeTilled = false};
-	tiles[0] = newTile;
+	tiles[3 * tilesX + 3].groundSource = GRASS;
+	tiles[3 * tilesX + 3].canBeTilled = false;
+	tiles[3 * tilesX + 3].entity = &beds.back();
 
 }
 

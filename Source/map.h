@@ -13,14 +13,16 @@
 
 
 class Entity;
+class TileEntity;
 class Plant;
+class Bed;
 
 class Tile {
 public:
     Rectangle groundSource{0};
     Color groundTint = WHITE;
     
-    Entity* entity = nullptr;
+    TileEntity* entity = nullptr;
     
     bool canBeTilled = false;
     bool isTilled = false;
@@ -28,6 +30,7 @@ public:
 
 
     void UpdateNewDay();
+    void Interact();
 
 };
 
@@ -41,6 +44,10 @@ public:
     
     std::list<Plant> plants = {};
     Texture2D plantSpriteSheet;
+
+    std::list<Bed> beds = {};
+    Texture2D furnitureSpriteSheet;
+
     std::vector<Entity*> entities = {};
 
     

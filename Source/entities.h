@@ -4,35 +4,53 @@
 #include "map.h"
 
 class Tile;
+class Map;
 
 class Entity {
 public:
 	Vector2 pos; // Used for rendering order, could maybe use collisionBox instead
 	Vector2 renderPos;
 
-	Texture2D* texture;
 	Rectangle collisionBox;
 
 
-	virtual void Update() = 0;
-	virtual void UpdateNewDay() = 0;
 	virtual void Render() = 0;
 
 };
 
+class TileEntity : public Entity {
+public:
+	Tile* parent = nullptr;
+	
+	virtual void UpdateNewDay() = 0;
+	virtual void Interact() = 0;
 
-class Plant : public Entity {
+};
+
+class Plant : public TileEntity {
 public:
 	int id;
+	Texture2D* spriteSheet;
 	Rectangle textureSource;
 	int growthStage = 0;
 	int maxGrowthStage;
-	Tile* parent = nullptr;
 
-	Plant(int idi, Texture2D* texturei);
+	Plant(int idi, Texture2D* spriteSheeti);
 
-	void Update();
 	void UpdateNewDay();
+	void Interact();
+	void Render();
+
+};
+
+class Bed : public TileEntity {
+public:
+	Texture2D* spriteSheet;
+	Rectangle textureSource = {0, 64, 64, 128};
+	Map* map = nullptr;
+
+	void UpdateNewDay();
+	void Interact();
 	void Render();
 
 };

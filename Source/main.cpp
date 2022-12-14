@@ -125,9 +125,6 @@ int main(void)
         PlayerUpdate(player, map, camera);
         CameraUpdate(camera, player, screen);
 
-        if (IsKeyPressed(KEY_U)) { // For testing
-            map.UpdateNewDay();
-        }
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
@@ -185,6 +182,14 @@ void PlayerUpdate(Player& player, Map& map, Camera2D& camera) {
             }
 
 
+        }
+    }
+    else if (IsMouseButtonPressed(1)) {
+        Vector2 mousePos = GetScreenToWorld2D(GetMousePosition(), camera);                        // Should use the TileIndex function instead
+        if (mousePos.x >= 0 && mousePos.x <= 32*64 && mousePos.y >= 0 && mousePos.y <= 32*64) {
+            int tileX = (mousePos.x / map.tileSize);
+            int tileY = (mousePos.y / map.tileSize);
+            map.tiles[(tileY * map.tilesX) + tileX].Interact();
         }
     }
 

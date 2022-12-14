@@ -135,7 +135,7 @@ int TileIndex(Camera2D& camera, Map& map, int facingDir, bool canTargetCurrTile 
 
 bool SeedClass::UseItem(Camera2D& camera, Map& map, int facingDir) {
 	int tileIndex = TileIndex(camera, map, facingDir, true);
-	if (tileIndex == -1 || !map.tiles[tileIndex].isTilled) return false;
+	if (tileIndex == -1 || !map.tiles[tileIndex].isTilled || map.tiles[tileIndex].entity != nullptr) return false;
 
 	currStack--;
 	map.PlantSeed(tileIndex, id);

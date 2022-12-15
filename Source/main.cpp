@@ -87,6 +87,7 @@ int main(void)
     
     Camera2D camera = { 0 };
     Player player;
+    player.position = Vector2{ (map.tilesX - 1.0f) * map.tileSize/2,(map.tilesY - 1.0f) * map.tileSize/2 };
 
     player.inventory.AddItem(201);
     player.inventory.AddItem(202);
@@ -148,6 +149,7 @@ int main(void)
 
     return 0;
 }
+
 
 void CameraUpdate(Camera2D& camera, Player& player, Screen& screen) {
     camera.offset = Vector2(screen.currWidth/2, screen.currHeight / 2);

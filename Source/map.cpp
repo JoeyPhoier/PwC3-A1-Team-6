@@ -15,9 +15,6 @@ void Tile::Interact(Inventory* inventory, Map* map) {
 
 }
 
-
-
-
 Map::Map(Entity* player) {
 	
 	spriteSheet = LoadTexture("assets/RPGpack_sheet.png");
@@ -33,8 +30,7 @@ Map::Map(Entity* player) {
 
 	for (int i = 0; i < tilesX * tilesY; ++i) {
 		Tile newTile;
-		int random = GetRandomValue(0, 10);      // Temporary world generation, should be changed
-		if (random > 1) {
+		if (preMap[i] == 0) {
 			newTile.groundSource = GRASS;
 			newTile.canBeTilled = true;
 		}

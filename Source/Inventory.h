@@ -34,7 +34,7 @@ public:												//that holds both the in-inventory sprite and the overworld s
 		sprite = item.sprite;
 	}
 
-	virtual bool UseItem(Camera2D& camera, Map& map, int facingDir) {
+	virtual bool UseItem(Camera2D& camera, Map& map, int* facingDir) {
 		currStack--;
 		return true;
 	};
@@ -55,7 +55,7 @@ public:
 		type = Seed;
 	}
 	SeedClass(Item& item) : Item(item) { type = Seed; }
-	bool UseItem(Camera2D& camera, Map& map, int facingDir);
+	bool UseItem(Camera2D& camera, Map& map, int* facingDir);
 };
 
 class ToolClass : public Item {
@@ -76,14 +76,14 @@ class HoeClass : public ToolClass {
 public:
 	HoeClass(int idi, std::string namei, Texture2D spritei) :ToolClass(idi, namei, spritei) { type = Hoe; };
 	HoeClass(Item& item) :ToolClass(item) { type = Hoe; };
-	bool UseItem(Camera2D& camera, Map& map, int facingDir);
+	bool UseItem(Camera2D& camera, Map& map, int* facingDir);
 };
 
 class WateringCanClass : public ToolClass {
 public:
 	WateringCanClass(int idi, std::string namei, Texture2D spritei) :ToolClass(idi, namei, spritei) { type = WateringCan; };
 	WateringCanClass(Item& item) :ToolClass(item) { type = WateringCan; };
-	bool UseItem(Camera2D& camera, Map& map, int facingDir);
+	bool UseItem(Camera2D& camera, Map& map, int* facingDir);
 };
 
 class Inventory {

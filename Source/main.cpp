@@ -90,6 +90,7 @@ int main(void)
     
     Camera2D camera = { 0 };
     Player player;
+    player.position = Vector2{ (map.tilesX - 1.0f) * map.tileSize/2,(map.tilesY - 1.0f) * map.tileSize/2 };
 
     player.inventory.AddItem(201);
     player.inventory.AddItem(202);
@@ -176,18 +177,6 @@ void PlayerUpdate(Player& player, Map& map, Camera2D& camera) {
 
     if (!player.allowInput) return; //Anything below this point will be skipped if mid animation.
 
-    if (IsMouseButtonPressed(0)) {
-        if (player.inventory.slot[player.inventory.selectedIndex]) {
-            player.inventory.slot[player.inventory.selectedIndex]->UseItem(camera, map, player.facingDir);
-            if (player.inventory.slot[player.inventory.selectedIndex]->currStack == 0) {
-                delete player.inventory.slot[player.inventory.selectedIndex];
-                player.inventory.slot[player.inventory.selectedIndex] = nullptr;
-            }
-
-
-        }
-    }
-
     Vector2 movDir = Vector2(0, 0);                                 //Could eventually add deltaTime if performance is affected
     if (IsKeyDown(KEY_A)) { movDir.x--; player.facingDir = Left; }  //Have to test whether local var and player stored var with
     if (IsKeyDown(KEY_D)) { movDir.x++; player.facingDir = Right; } //point lookup is more efficient.
@@ -202,19 +191,42 @@ void PlayerUpdate(Player& player, Map& map, Camera2D& camera) {
         player.position.y += movDir.y * player.walkingspeed;
     }
     
+    if (IsMouseButtonPressed(0)) {
+        if (player.inventory.slot[player.inventory.selectedIndex]) {
+            switch (player.inventory.slot[player.inventory.selectedIndex]->type) {
+            case Hoe:
+                player.allowInput = false;
+                player.animCont = player.animMax;
+                player.SpriteCont = 4;
+                break;
+            case WateringCan:
+                player.allowInput = false;
+                player.animCont = player.animMax;
+                player.SpriteCont = 8;
+                break;
+            }
+            player.inventory.slot[player.inventory.selectedIndex]->UseItem(camera, map, &player.facingDir);
+            if (player.inventory.slot[player.inventory.selectedIndex]->currStack == 0) {
+                delete player.inventory.slot[player.inventory.selectedIndex];
+                player.inventory.slot[player.inventory.selectedIndex] = nullptr;
+            }
+        }
+    }
 
 }
 
 void RenderPlayer(Player& player) {
-    if (player.isMoving && player.SpriteCont < 2) 
-    {
-        player.SpriteCont = 2;
-        player.animCont = player.animMax;
-    }
-    if (!player.isMoving && player.SpriteCont > 1)
-    {
-        player.SpriteCont = 0;
-        player.animCont = player.animMax;
+    if (player.allowInput) {
+        if (player.isMoving && player.SpriteCont < 2)
+        {
+            player.SpriteCont = 2;
+            player.animCont = player.animMax;
+        }
+        if (!player.isMoving && player.SpriteCont > 1)
+        {
+            player.SpriteCont = 0;
+            player.animCont = player.animMax;
+        }
     }
 
     if (player.animCont > 0) {
@@ -223,22 +235,24 @@ void RenderPlayer(Player& player) {
     }
     else {
 
-        if (player.SpriteCont == 1) 
+        if (player.SpriteCont % 2 == 0)
         {
-            player.SpriteCont = 0;
+            player.SpriteCont++;
         }
-        else if (player.SpriteCont == 3) 
+        else if (player.SpriteCont < 4)
         {
-            player.SpriteCont = 2;
+            player.SpriteCont--;
+            
         }
         else 
         {
-            player.SpriteCont++;
+            player.SpriteCont = 0;
+            player.allowInput = true;
         }
         player.animCont = player.animMax;
     }
 
-    DrawTextureRec(player.spriteSheet, Rectangle{ player.SpriteCont * player.spriteSize,float(player.facingDir * player.spriteSize),player.spriteSize,player.spriteSize }, Vector2{ player.position.x - player.spriteSize / 2,player.position.y - player.spriteSize * 0.9f }, WHITE);
+    DrawTextureRec(player.spriteSheet, Rectangle{ player.SpriteCont * player.spriteSize,float(player.facingDir * player.spriteSize),player.spriteSize,player.spriteSize }, Vector2{ player.position.x - player.spriteSize / 2,player.position.y - player.spriteSize * 0.62f }, WHITE);
     //render
     
 }

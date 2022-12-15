@@ -85,7 +85,7 @@ bool Inventory::RemoveItem(int id, int amount) {
 	return didLastFuncPass;
 }
 
-int TileIndex(Camera2D& camera, Map& map, int facingDir, bool canTargetCurrTile = 0) {
+int TileIndex(Camera2D& camera, Map& map, int* facingDir, bool canTargetCurrTile = 0) {
 	int tileCoorX = (camera.target.x) / (map.tileSize * camera.zoom);
 	int tileCoorY = (camera.target.y) / (map.tileSize * camera.zoom);
 
@@ -99,21 +99,25 @@ int TileIndex(Camera2D& camera, Map& map, int facingDir, bool canTargetCurrTile 
 	if ((mouseCoorX <= 1 && mouseCoorX >= -1 && mouseCoorY <= 1 && mouseCoorY >= -1) && !(mouseCoorX == 0 && mouseCoorY == 0 && !canTargetCurrTile)) {
 		switch (mouseCoorX) {
 		case 1:
+			*facingDir = Right;
 			tileCoorX++;
 			break;
 		case -1:
+			*facingDir = Left;
 			tileCoorX--;
 		}
 		switch (mouseCoorY) {
 		case 1:
+			*facingDir = Down;
 			tileCoorY++;
 			break;
 		case -1:
+			*facingDir = Up;
 			tileCoorY--;
 		}
 	}
 	else {
-		switch (facingDir) {
+		switch (*facingDir) {
 		case(2):
 			tileCoorX--;
 			break;
@@ -133,7 +137,7 @@ int TileIndex(Camera2D& camera, Map& map, int facingDir, bool canTargetCurrTile 
 	else return (tileCoorX + tileCoorY * map.tilesX);
 }
 
-bool SeedClass::UseItem(Camera2D& camera, Map& map, int facingDir) {
+bool SeedClass::UseItem(Camera2D& camera, Map& map, int* facingDir) {
 	int tileIndex = TileIndex(camera, map, facingDir, true);
 	if (tileIndex == -1 || !map.tiles[tileIndex].isTilled) return false;
 
@@ -144,7 +148,7 @@ bool SeedClass::UseItem(Camera2D& camera, Map& map, int facingDir) {
 	
 }
 
-bool HoeClass::UseItem(Camera2D& camera, Map& map, int facingDir) {		//Hoes,Picks and axes cannot target the player tile.
+bool HoeClass::UseItem(Camera2D& camera, Map& map, int* facingDir) {		//Hoes,Picks and axes cannot target the player tile.
 	int tileIndex = TileIndex(camera, map, facingDir);
 	if (tileIndex == -1 || !map.tiles[tileIndex].canBeTilled) return false;
 
@@ -154,7 +158,7 @@ bool HoeClass::UseItem(Camera2D& camera, Map& map, int facingDir) {		//Hoes,Pick
 	return true;
 }
 
-bool WateringCanClass::UseItem(Camera2D& camera, Map& map, int facingDir) {
+bool WateringCanClass::UseItem(Camera2D& camera, Map& map, int* facingDir) {
 	int tileIndex = TileIndex(camera, map, facingDir, true);
 	if (tileIndex == -1 || !map.tiles[tileIndex].isTilled) return false;
 

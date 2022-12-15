@@ -39,7 +39,7 @@ public:
 	int growthStage = 0;
 	int maxGrowthStage;
 
-	Plant(int idi, Texture2D* spriteSheeti);
+	Plant(int idi, Texture2D* spriteSheeti, Vector2 positioni, Tile* parenti);
 
 	void UpdateNewDay();
 	void Interact(Inventory* inventory);

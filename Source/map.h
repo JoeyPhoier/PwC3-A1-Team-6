@@ -57,6 +57,8 @@ public:
     
     Map(Entity* player);
 
+    void SortEntities();
+
     void RemoveDeadEntities();
 
     void PlantSeed(int tileIndex, int id);

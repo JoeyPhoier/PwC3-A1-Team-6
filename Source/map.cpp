@@ -62,6 +62,22 @@ Map::Map(Entity* player) {
 
 }
 
+void Map::SortEntities() {
+	size_t numberOfEntities = entities.size();
+	for (size_t i = 1; i < numberOfEntities; ++i) {
+		for (size_t j = i; j != 0; --j) {
+			if (entities[j]->position.y < entities[j - 1]->position.y) {
+				Entity* temp = entities[j];
+				entities[j] = entities[j - 1];
+				entities[j - 1] = temp;
+			}
+			else {
+				break;
+			}
+		}
+	}
+}
+
 void Map::RemoveDeadEntities() {
 	auto newEnd = std::remove_if(entities.begin(), entities.end(), [](Entity* entity) { return entity->isDead; });
 	entities.erase(newEnd, entities.end());
@@ -76,9 +92,7 @@ void Map::RemoveDeadEntities() {
 }
 
 void Map::PlantSeed(int tileIndex, int id) {
-	Plant newPlant{id, &plantSpriteSheet};
-	newPlant.renderPos = Vector2((tileIndex%tilesY) * tileSize, (tileIndex/tilesY) * tileSize);
-	newPlant.parent = &tiles[tileIndex];
+	Plant newPlant{id, &plantSpriteSheet, Vector2((tileIndex % tilesY) * tileSize, (tileIndex / tilesY) * tileSize), &tiles[tileIndex]};
 
 	plants.push_back(newPlant);
 	entities.push_back(&plants.back());
@@ -110,7 +124,7 @@ void Map::RenderGround(Camera2D* camera) {
 }
 
 void Map::RenderEntities(Camera2D* camera) {
-	// Sort entities
+	SortEntities();
 	size_t numOfEntities = entities.size();
 	for (size_t i = 0; i < numOfEntities; ++i) {
 		// Should check if it's onscreen

@@ -3,15 +3,15 @@
 
 
 
-Plant::Plant(int idi, Texture2D* spriteSheeti) {
+Plant::Plant(int idi, Texture2D* spriteSheeti, Vector2 positioni, Tile* parenti) {
 	switch (idi) {
-	case 101:
-
-		break;
 	case 102:
-		id = id;
+		id = idi;
 		lootId = idi - 100;
+		position = positioni;
+		renderPos = positioni;
 		spriteSheet = spriteSheeti;
+		parent = parenti;
 		textureSource = Rectangle(0, 64, 64, 64);
 		maxGrowthStage = 12;
 		break;
@@ -35,6 +35,7 @@ void Plant::UpdateNewDay() {
 		}
 		else if (growthStage == 1) {
 			textureSource.x = 64;
+			position.y += 48;
 		}
 		
 		

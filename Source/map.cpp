@@ -9,16 +9,16 @@ void Tile::UpdateNewDay() {
 	groundTint = WHITE;
 }
 
-void Tile::Interact() {
+void Tile::Interact(Inventory* inventory, Map* map) {
 	if (entity == nullptr) return;
-	entity->Interact();
+	entity->Interact(inventory);
 
 }
 
 
 
 
-Map::Map() {
+Map::Map(Entity* player) {
 	
 	spriteSheet = LoadTexture("assets/RPGpack_sheet.png");
 
@@ -46,7 +46,7 @@ Map::Map() {
 	}
 	
 	Bed newBed;
-	newBed.pos = Vector2(3 * tileSize, 3 * tileSize);
+	newBed.position = Vector2(3 * tileSize, 3 * tileSize);
 	newBed.renderPos = Vector2(3 * tileSize, 2 * tileSize);
 	newBed.spriteSheet = &furnitureSpriteSheet;
 	newBed.parent = &tiles[3 * tilesX + 3];
@@ -58,6 +58,21 @@ Map::Map() {
 	tiles[3 * tilesX + 3].canBeTilled = false;
 	tiles[3 * tilesX + 3].entity = &beds.back();
 
+	entities.push_back(player);
+
+}
+
+void Map::RemoveDeadEntities() {
+	auto newEnd = std::remove_if(entities.begin(), entities.end(), [](Entity* entity) { return entity->isDead; });
+	entities.erase(newEnd, entities.end());
+
+	for (int i = 0; i < tilesX * tilesY; ++i) {
+		if (tiles[i].entity != nullptr) {
+			if (tiles[i].entity->isDead) { tiles[i].entity = nullptr; }
+		}
+	}
+
+	plants.remove_if([](Plant& plant) { return plant.isDead; });
 }
 
 void Map::PlantSeed(int tileIndex, int id) {
@@ -95,6 +110,7 @@ void Map::RenderGround(Camera2D* camera) {
 }
 
 void Map::RenderEntities(Camera2D* camera) {
+	// Sort entities
 	size_t numOfEntities = entities.size();
 	for (size_t i = 0; i < numOfEntities; ++i) {
 		// Should check if it's onscreen

@@ -17,6 +17,10 @@ class TileEntity;
 class Plant;
 class Bed;
 
+class Inventory;
+
+class Map;
+
 class Tile {
 public:
     Rectangle groundSource{0};
@@ -30,7 +34,7 @@ public:
 
 
     void UpdateNewDay();
-    void Interact();
+    void Interact(Inventory* inventory, Map* map);
 
 };
 
@@ -51,7 +55,9 @@ public:
     std::vector<Entity*> entities = {};
 
     
-    Map();
+    Map(Entity* player);
+
+    void RemoveDeadEntities();
 
     void PlantSeed(int tileIndex, int id);
 

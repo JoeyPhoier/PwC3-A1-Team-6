@@ -1,13 +1,14 @@
 #pragma once
+
+#include "entities.h"
 #include "Inventory.h"
 #include "raylib.h"
 
 
 enum Direction { Down, Up, Left, Right };
 
-class Player {
+class Player : public Entity {
 public:
-    Vector2 position = Vector2(0, 0);
     Texture2D sprite;
     float walkingspeed = 5.0f;
     Inventory inventory;
@@ -19,5 +20,9 @@ public:
     int animMax = 25;
     Texture2D spriteSheet = LoadTexture("assets/Basic Character Spritesheet2.png");
     float spriteSize = 72;
+
+
+    void Update(Map& map, Camera2D& camera);
+    void Render();
 
 };

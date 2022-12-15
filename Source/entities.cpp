@@ -10,6 +10,7 @@ Plant::Plant(int idi, Texture2D* spriteSheeti) {
 		break;
 	case 102:
 		id = id;
+		lootId = idi - 100;
 		spriteSheet = spriteSheeti;
 		textureSource = Rectangle(0, 64, 64, 64);
 		maxGrowthStage = 12;
@@ -41,9 +42,10 @@ void Plant::UpdateNewDay() {
 	
 }
 
-void Plant::Interact() {
+void Plant::Interact(Inventory* inventory) {
 	if (growthStage < maxGrowthStage) return;
-	// Remove plant entity and give the player the item
+	inventory->AddItem(lootId);
+	isDead = true;
 }
 
 void Plant::Render() {
@@ -55,7 +57,7 @@ void Bed::UpdateNewDay() {
 	return;
 }
 
-void Bed::Interact() {
+void Bed::Interact(Inventory* inventory) {
 	map->UpdateNewDay();
 }
 

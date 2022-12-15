@@ -2,16 +2,18 @@
 
 #include "raylib.h"
 #include "map.h"
+#include "Inventory.h"
 
 class Tile;
 class Map;
 
+class Inventory;
+
 class Entity {
 public:
-	Vector2 pos; // Used for rendering order, could maybe use collisionBox instead
-	Vector2 renderPos;
-
+	Vector2 position = Vector2(0, 0); // Used for rendering order, could maybe use collisionBox instead
 	Rectangle collisionBox;
+	bool isDead = false;
 
 
 	virtual void Render() = 0;
@@ -21,15 +23,17 @@ public:
 class TileEntity : public Entity {
 public:
 	Tile* parent = nullptr;
+	Vector2 renderPos;
 	
 	virtual void UpdateNewDay() = 0;
-	virtual void Interact() = 0;
+	virtual void Interact(Inventory* inventory) = 0;
 
 };
 
 class Plant : public TileEntity {
 public:
 	int id;
+	int lootId;
 	Texture2D* spriteSheet;
 	Rectangle textureSource;
 	int growthStage = 0;
@@ -38,7 +42,7 @@ public:
 	Plant(int idi, Texture2D* spriteSheeti);
 
 	void UpdateNewDay();
-	void Interact();
+	void Interact(Inventory* inventory);
 	void Render();
 
 };
@@ -50,7 +54,7 @@ public:
 	Map* map = nullptr;
 
 	void UpdateNewDay();
-	void Interact();
+	void Interact(Inventory* inventory);
 	void Render();
 
 };

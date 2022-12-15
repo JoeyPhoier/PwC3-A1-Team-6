@@ -1,9 +1,7 @@
 #include "Inventory.h"
 #include <vector>
 #include <iostream>
-#include "raylib.h"
-#include "map.h"
-#include "player.h"						
+//#include "player.h"						
 
 Inventory::Inventory() {
 	for (int i = 0; i < invLim; i++) {

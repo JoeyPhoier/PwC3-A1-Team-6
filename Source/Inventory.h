@@ -7,6 +7,8 @@
 #include "raylib.h"
 #include "map.h"
 
+class Map;
+
 enum ItemType { NaN, Fruit, Vegetable, Seed, Tool, Hoe, WateringCan };
 
 class Item {										//Might need to make some subclasses for added info, such as a seed subclass

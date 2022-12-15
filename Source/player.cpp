@@ -1,3 +1,101 @@
 #include "player.h"
+#include "JCC_tools.h"
 
+
+void Player::Update(Map& map, Camera2D& camera) {
+
+    //First the functions that ignore "allowInput".
+
+    if (IsKeyPressed(KEY_ONE)) inventory.selectedIndex = 0;
+    else if (IsKeyPressed(KEY_TWO)) inventory.selectedIndex = 1;
+    else if (IsKeyPressed(KEY_THREE)) inventory.selectedIndex = 2;
+    else if (IsKeyPressed(KEY_FOUR)) inventory.selectedIndex = 3;
+    else if (IsKeyPressed(KEY_FIVE)) inventory.selectedIndex = 4;
+    else if (IsKeyPressed(KEY_SIX)) inventory.selectedIndex = 5;
+    else if (IsKeyPressed(KEY_SEVEN)) inventory.selectedIndex = 6;
+    else if (IsKeyPressed(KEY_EIGHT)) inventory.selectedIndex = 7;
+    else if (IsKeyPressed(KEY_NINE)) inventory.selectedIndex = 8;
+    else if (IsKeyPressed(KEY_ZERO)) inventory.selectedIndex = 9;
+
+
+    if (IsKeyUp(KEY_LEFT_CONTROL)) inventory.selectedIndex -= GetMouseWheelMove();  //Probably needs some smoothing
+    if (inventory.selectedIndex > 9) inventory.selectedIndex = 0;
+    else if (inventory.selectedIndex < 0) inventory.selectedIndex = 9;
+
+    if (!allowInput) return; //Anything below this point will be skipped if mid animation.
+
+    if (IsMouseButtonPressed(0)) {
+        if (inventory.slot[inventory.selectedIndex]) {
+            inventory.slot[inventory.selectedIndex]->UseItem(camera, map, facingDir);
+            if (inventory.slot[inventory.selectedIndex]->currStack == 0) {
+                delete inventory.slot[inventory.selectedIndex];
+                inventory.slot[inventory.selectedIndex] = nullptr;
+            }
+
+
+        }
+    }
+    else if (IsMouseButtonPressed(1)) {
+        Vector2 mousePos = GetScreenToWorld2D(GetMousePosition(), camera);                        // Should use the TileIndex function instead
+        if (mousePos.x >= 0 && mousePos.x <= 32 * 64 && mousePos.y >= 0 && mousePos.y <= 32 * 64) {
+            int tileX = (mousePos.x / map.tileSize);
+            int tileY = (mousePos.y / map.tileSize);
+            map.tiles[(tileY * map.tilesX) + tileX].Interact(&inventory, &map);
+        }
+    }
+
+    Vector2 movDir = Vector2(0, 0);                                 //Could eventually add deltaTime if performance is affected
+    if (IsKeyDown(KEY_A)) { movDir.x--; facingDir = Left; }  //Have to test whether local var and player stored var with
+    if (IsKeyDown(KEY_D)) { movDir.x++; facingDir = Right; } //point lookup is more efficient.
+    if (IsKeyDown(KEY_W)) { movDir.y--; facingDir = Up; }
+    if (IsKeyDown(KEY_S)) { movDir.y++; facingDir = Down; }
+    if (IsKeyUp(KEY_A) && IsKeyUp(KEY_S) && IsKeyUp(KEY_D) && IsKeyUp(KEY_W)) isMoving = false;
+    else isMoving = true;
+
+    if ((movDir.x != 0 || movDir.y != 0) && isMoving) {
+        NormalVect(movDir);
+        position.x += movDir.x * walkingspeed;
+        position.y += movDir.y * walkingspeed;
+    }
+
+
+}
+
+void Player::Render() {
+    if (isMoving && SpriteCont < 2)
+    {
+        SpriteCont = 2;
+        animCont = animMax;
+    }
+    if (!isMoving && SpriteCont > 1)
+    {
+        SpriteCont = 0;
+        animCont = animMax;
+    }
+
+    if (animCont > 0) {
+        animCont--;
+        //std::cout << "animCont decrease" << std::endl;
+    }
+    else {
+
+        if (SpriteCont == 1)
+        {
+            SpriteCont = 0;
+        }
+        else if (SpriteCont == 3)
+        {
+            SpriteCont = 2;
+        }
+        else
+        {
+            SpriteCont++;
+        }
+        animCont = animMax;
+    }
+
+    DrawTextureRec(spriteSheet, Rectangle{ SpriteCont * spriteSize,float(facingDir * spriteSize),spriteSize,spriteSize }, Vector2{ position.x - spriteSize / 2,position.y - spriteSize * 0.9f }, WHITE);
+    //render
+
+}
 

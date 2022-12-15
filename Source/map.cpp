@@ -9,47 +9,13 @@ void Tile::UpdateNewDay() {
 	groundTint = WHITE;
 }
 
+void Tile::Interact(Inventory* inventory, Map* map) {
+	if (entity == nullptr) return;
+	entity->Interact(inventory);
 
+}
 
-
-
-
-Map::Map() {
-
-	std::vector<int> preMap = {
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-	};
+Map::Map(Entity* player) {
 	
 	spriteSheet = LoadTexture("assets/RPGpack_sheet.png");
 
@@ -57,6 +23,10 @@ Map::Map() {
 	ImageResize(&tempImage, 320, 384);
 	plantSpriteSheet = LoadTextureFromImage(tempImage);
 	//plantSpriteSheet = LoadTexture("assets/plants_free.png");
+
+	tempImage = LoadImage("assets/Basic Furniture.png");
+	ImageResize(&tempImage, 576, 384);
+	furnitureSpriteSheet = LoadTextureFromImage(tempImage);
 
 	for (int i = 0; i < tilesX * tilesY; ++i) {
 		Tile newTile;
@@ -70,16 +40,55 @@ Map::Map() {
 
 		tiles.push_back(newTile);
 	}
+	
+	Bed newBed;
+	newBed.position = Vector2(3 * tileSize, 3 * tileSize);
+	newBed.renderPos = Vector2(3 * tileSize, 2 * tileSize);
+	newBed.spriteSheet = &furnitureSpriteSheet;
+	newBed.parent = &tiles[3 * tilesX + 3];
+	newBed.map = this;
+	beds.push_back(newBed);
+	entities.push_back(&beds.back());
 
-	Tile newTile{ .groundSource = GRASS, .canBeTilled = false};
-	tiles[0] = newTile;
+	tiles[3 * tilesX + 3].groundSource = GRASS;
+	tiles[3 * tilesX + 3].canBeTilled = false;
+	tiles[3 * tilesX + 3].entity = &beds.back();
+
+	entities.push_back(player);
 
 }
 
+void Map::SortEntities() {
+	size_t numberOfEntities = entities.size();
+	for (size_t i = 1; i < numberOfEntities; ++i) {
+		for (size_t j = i; j != 0; --j) {
+			if (entities[j]->position.y < entities[j - 1]->position.y) {
+				Entity* temp = entities[j];
+				entities[j] = entities[j - 1];
+				entities[j - 1] = temp;
+			}
+			else {
+				break;
+			}
+		}
+	}
+}
+
+void Map::RemoveDeadEntities() {
+	auto newEnd = std::remove_if(entities.begin(), entities.end(), [](Entity* entity) { return entity->isDead; });
+	entities.erase(newEnd, entities.end());
+
+	for (int i = 0; i < tilesX * tilesY; ++i) {
+		if (tiles[i].entity != nullptr) {
+			if (tiles[i].entity->isDead) { tiles[i].entity = nullptr; }
+		}
+	}
+
+	plants.remove_if([](Plant& plant) { return plant.isDead; });
+}
+
 void Map::PlantSeed(int tileIndex, int id) {
-	Plant newPlant{id, &plantSpriteSheet};
-	newPlant.renderPos = Vector2((tileIndex%tilesY) * tileSize, (tileIndex/tilesY) * tileSize);
-	newPlant.parent = &tiles[tileIndex];
+	Plant newPlant{id, &plantSpriteSheet, Vector2((tileIndex % tilesY) * tileSize, (tileIndex / tilesY) * tileSize), &tiles[tileIndex]};
 
 	plants.push_back(newPlant);
 	entities.push_back(&plants.back());
@@ -111,6 +120,7 @@ void Map::RenderGround(Camera2D* camera) {
 }
 
 void Map::RenderEntities(Camera2D* camera) {
+	SortEntities();
 	size_t numOfEntities = entities.size();
 	for (size_t i = 0; i < numOfEntities; ++i) {
 		// Should check if it's onscreen

@@ -3,14 +3,15 @@
 
 
 
-Plant::Plant(int idi, Texture2D* texturei) {
+Plant::Plant(int idi, Texture2D* spriteSheeti, Vector2 positioni, Tile* parenti) {
 	switch (idi) {
-	case 101:
-
-		break;
 	case 102:
-		id = id;
-		texture = texturei;
+		id = idi;
+		lootId = idi - 100;
+		position = positioni;
+		renderPos = positioni;
+		spriteSheet = spriteSheeti;
+		parent = parenti;
 		textureSource = Rectangle(0, 64, 64, 64);
 		maxGrowthStage = 12;
 		break;
@@ -18,10 +19,6 @@ Plant::Plant(int idi, Texture2D* texturei) {
 
 		break;
 	}
-}
-
-void Plant::Update() {
-	return;
 }
 
 void Plant::UpdateNewDay() {
@@ -38,6 +35,7 @@ void Plant::UpdateNewDay() {
 		}
 		else if (growthStage == 1) {
 			textureSource.x = 64;
+			position.y += 48;
 		}
 		
 		
@@ -45,6 +43,25 @@ void Plant::UpdateNewDay() {
 	
 }
 
+void Plant::Interact(Inventory* inventory) {
+	if (growthStage < maxGrowthStage) return;
+	inventory->AddItem(lootId);
+	isDead = true;
+}
+
 void Plant::Render() {
-	DrawTextureRec(*texture, textureSource, renderPos, WHITE);
+	DrawTextureRec(*spriteSheet, textureSource, renderPos, WHITE);
+}
+
+
+void Bed::UpdateNewDay() {
+	return;
+}
+
+void Bed::Interact(Inventory* inventory) {
+	map->UpdateNewDay();
+}
+
+void Bed::Render() {
+	DrawTextureRec(*spriteSheet, textureSource, renderPos, WHITE);
 }

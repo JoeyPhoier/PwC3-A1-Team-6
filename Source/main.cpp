@@ -87,7 +87,6 @@ int main(void)
     
     Camera2D camera = { 0 };
     Player player;
-    player.position = Vector2{ (map.tilesX - 1.0f) * map.tileSize/2,(map.tilesY - 1.0f) * map.tileSize/2 };
 
     player.inventory.AddItem(201);
     player.inventory.AddItem(202);
@@ -95,6 +94,8 @@ int main(void)
     player.inventory.AddItem(102, 10);
 
     Map map(&player);
+    player.position = Vector2{ (map.tilesX - 1.0f) * map.tileSize / 2,(map.tilesY - 1.0f) * map.tileSize / 2 };
+
 
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key

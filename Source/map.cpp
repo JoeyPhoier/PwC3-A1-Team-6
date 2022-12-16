@@ -1,8 +1,5 @@
 #include "map.h"
 
-
-
-
 void Tile::UpdateNewDay() {
 	if (entity != nullptr) { entity->UpdateNewDay(); }
 	isWet = false;

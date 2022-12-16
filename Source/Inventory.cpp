@@ -3,6 +3,8 @@
 #include <iostream>
 //#include "player.h"						
 
+enum Direction { Down, Up, Left, Right };
+
 Inventory::Inventory() {
 	for (int i = 0; i < invLim; i++) {
 		slot[i] = nullptr;

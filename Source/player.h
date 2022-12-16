@@ -18,7 +18,7 @@ public:
     bool allowInput = true;
     int SpriteCont = 0;
     int animMax = 25;
-    Texture2D spriteSheet = LoadTexture("assets/Basic Character Spritesheet2.png");
+    Texture2D spriteSheet = LoadTexture("assets/Basic Character Spritesheet.png");
     float spriteSize = 192;
 
 

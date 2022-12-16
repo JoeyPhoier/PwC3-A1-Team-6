@@ -1,7 +1,8 @@
 #include "entities.h"
 
-
-
+void TileEntity::Render() {
+	DrawTextureRec(*spriteSheet, textureSource, renderPos, WHITE);
+};
 
 Plant::Plant(int idi, Texture2D* spriteSheeti, Vector2 positioni, Tile* parenti) {
 	switch (idi) {
@@ -49,10 +50,13 @@ void Plant::Interact(Inventory* inventory) {
 	isDead = true;
 }
 
-void Plant::Render() {
-	DrawTextureRec(*spriteSheet, textureSource, renderPos, WHITE);
+
+Bed::Bed() {
+	textureSource = { 0, 64, 64, 128 };
 }
 
+Bed::~Bed() {
+}
 
 void Bed::UpdateNewDay() {
 	return;
@@ -62,6 +66,27 @@ void Bed::Interact(Inventory* inventory) {
 	map->UpdateNewDay();
 }
 
-void Bed::Render() {
-	DrawTextureRec(*spriteSheet, textureSource, renderPos, WHITE);
+MarketStall::MarketStall(Texture2D* spriteSheeti, Vector2 renderPosi) {
+	spriteSheet = spriteSheeti;
+	textureSource = Rectangle{ 0, 0, float(spriteSheet->width), float(spriteSheet->height)};
+	renderPos = Vector2(renderPosi.x - spriteSheet->width * 0.4f, renderPosi.y - spriteSheet->height * 0.55f);
+	position = renderPosi;
 }
+
+MarketStall::~MarketStall(){
+}
+
+void MarketStall::Interact(Inventory* inventory) {
+	std::cout << "GOOD SELL ITS WORKING" << std::endl;
+	for(int i = 0; i < inventory->invLim; i++)
+	{
+		if (inventory->slot[i] != nullptr && inventory->slot[i]->isSellable) {
+			inventory->currMoney += inventory->slot[i]->currStack * inventory->slot[i]->value;
+			delete inventory->slot[i];
+			inventory->slot[i] = nullptr;
+			
+
+		}
+	}
+}
+

@@ -97,6 +97,7 @@ public:
 
     
     Map(Entity* player);
+	~Map();
 
     void SortEntities();
 

@@ -187,7 +187,7 @@ void DrawGui(Screen& screen, Player& player) {
             DrawRectangle(screen.currWidth / 2 + (60 * i) - 290, screen.currHeight - 55, 40, 40, DARKBROWN);
         }
         if (player.inventory.slot[i] != nullptr) {
-            DrawTexture(player.inventory.slot[i]->sprite, screen.currWidth / 2 + (60 * i) - 290, screen.currHeight - 55, WHITE);
+            DrawTextureRec(*player.inventory.slot[i]->sprite, player.inventory.slot[i]->spriteSource, Vector2(screen.currWidth / 2 + (60 * i) - 290, screen.currHeight - 55), WHITE);
             if (player.inventory.slot[i]->currStack > 1) {
                 int spacing = 0;                                //Might be better to show text as img, in order to indent it to the right.
                 if (player.inventory.slot[i]->currStack > 100) spacing = 2;     //Using log() would make the code simpler, but slower.

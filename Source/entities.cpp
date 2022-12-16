@@ -5,16 +5,28 @@ void TileEntity::Render() {
 };
 
 Plant::Plant(int idi, Texture2D* spriteSheeti, Vector2 positioni, Tile* parenti) {
+	id = idi;
+	lootId = idi - 100;
+	position = positioni;
+	renderPos = positioni;
+	spriteSheet = spriteSheeti;
+	parent = parenti;
 	switch (idi) {
+	case 101:
+		textureSource = Rectangle(0, 0, 64, 64);
+		maxGrowthStage = 16;
+		break;
 	case 102:
-		id = idi;
-		lootId = idi - 100;
-		position = positioni;
-		renderPos = positioni;
-		spriteSheet = spriteSheeti;
-		parent = parenti;
 		textureSource = Rectangle(0, 64, 64, 64);
 		maxGrowthStage = 12;
+		break;
+	case 103:
+		textureSource = Rectangle(0, 128, 64, 64);
+		maxGrowthStage = 9;
+		break;
+	case 104:
+		textureSource = Rectangle(0, 192, 64, 64);
+		maxGrowthStage = 10;
 		break;
 	default:
 

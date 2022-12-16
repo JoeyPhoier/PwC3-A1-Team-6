@@ -21,11 +21,13 @@ Map::Map(Entity* player) {
 	Image tempImage = LoadImage("assets/plants_free.png");
 	ImageResize(&tempImage, 320, 384);
 	plantSpriteSheet = LoadTextureFromImage(tempImage);
+	UnloadImage(tempImage);
 	//plantSpriteSheet = LoadTexture("assets/plants_free.png");
 
 	tempImage = LoadImage("assets/Basic Furniture.png");
 	ImageResize(&tempImage, 576, 384);
 	furnitureSpriteSheet = LoadTextureFromImage(tempImage);
+	UnloadImage(tempImage);
 
 	for (int i = 0; i < tilesX * tilesY; ++i) {
 		Tile newTile;
@@ -69,6 +71,12 @@ Map::Map(Entity* player) {
 
 	entities.push_back(player);
 
+}
+
+Map::~Map() {
+	UnloadTexture(spriteSheet);
+	UnloadTexture(plantSpriteSheet);
+	UnloadTexture(furnitureSpriteSheet);
 }
 
 void Map::SortEntities() {

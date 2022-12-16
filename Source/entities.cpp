@@ -29,7 +29,8 @@ Plant::Plant(int idi, Texture2D* spriteSheeti, Vector2 positioni, Tile* parenti)
 		maxGrowthStage = 10;
 		break;
 	default:
-
+		textureSource = Rectangle(0, 0, 0, 0);
+		maxGrowthStage = 0;
 		break;
 	}
 }

@@ -96,7 +96,7 @@ public:
 class Inventory {
 public:
 	std::array<Item*, 10> slot;						//Using Item** might make inventory expansion easier
-	int invLim = slot.size();
+	int invLim = static_cast<int>(slot.size());
 	int selectedIndex = 0;
 	int currMoney = 0;
 	int preMoney = 0;

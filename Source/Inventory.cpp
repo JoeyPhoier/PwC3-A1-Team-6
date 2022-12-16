@@ -91,7 +91,7 @@ bool Inventory::AddItem(int id, int amount) {
 }
 
 bool Inventory::RemoveItem(int id) {
-	int firstEmptyIndex = -1;
+	//int firstEmptyIndex = -1;
 	for (int i = 0; i < invLim; i++) {
 		if (slot[i] != nullptr) {
 			if (slot[i]->id == id && slot[i]->isStackable) {
@@ -116,15 +116,17 @@ bool Inventory::RemoveItem(int id, int amount) {
 }
 
 int TileIndex(Camera2D& camera, Vector2& playerPos, Map& map, int* facingDir, bool canTargetCurrTile = 0) {
-	Vector2 currTile{ int((playerPos.x) / (map.tileSize)),int((playerPos.y) / (map.tileSize)) };
+	//Vector2 currTile{ int((playerPos.x) / (map.tileSize)),int((playerPos.y) / (map.tileSize)) };
+	int currTileX = static_cast<int>(playerPos.x / map.tileSize);
+	int currTileY = static_cast<int>(playerPos.y / map.tileSize);
 	Vector2 mouseCoor = GetScreenToWorld2D(GetMousePosition(), camera);
 
-	mouseCoor.x = int (mouseCoor.x / map.tileSize);
-	mouseCoor.y = int (mouseCoor.y / map.tileSize);
-	std::cout << mouseCoor.x << std::endl;
+	int mouseX = static_cast<int>(mouseCoor.x) / map.tileSize;
+	int mouseY = static_cast<int>(mouseCoor.y) / map.tileSize;
+	std::cout << mouseX << std::endl;
 
-	int deltax = mouseCoor.x - currTile.x;
-	int deltay = mouseCoor.y - currTile.y;
+	int deltax = mouseX - currTileX;
+	int deltay = mouseY - currTileY;
 	//int mouseCoorX = int((GetMouseX() - camera.offset.x + camera.target.x) / (map.tileSize * camera.zoom)) - tileCoorX;
 	//int mouseCoorY = int((GetMouseY() - camera.offset.y + camera.target.y) / (map.tileSize * camera.zoom)) - tileCoorY;
 
@@ -135,41 +137,41 @@ int TileIndex(Camera2D& camera, Vector2& playerPos, Map& map, int* facingDir, bo
 		switch (deltax) {
 		case 1:
 			*facingDir = Right;
-			currTile.x++;
+			currTileX++;
 			break;
 		case -1:
 			*facingDir = Left;
-			currTile.x--;
+			currTileX--;
 		}
 		switch (deltay) {
 		case 1:
 			*facingDir = Down;
-			currTile.y++;
+			currTileY++;
 			break;
 		case -1:
 			*facingDir = Up;
-			currTile.y--;
+			currTileY--;
 		}
 	}
 	else {
 		switch (*facingDir) {
 		case(2):
-			currTile.x--;
+			currTileX--;
 			break;
 		case(1):
-			currTile.y--;
+			currTileY--;
 			break;
 		case(3):
-			currTile.x++;
+			currTileX++;
 			break;
 		case(0):
-			currTile.y++;
+			currTileY++;
 			break;
 		}
 	}
 
-	if (currTile.x >= map.tilesX || currTile.x < 0 || currTile.y >= map.tilesY || currTile.y < 0) return -1;
-	else return (currTile.x + currTile.y * map.tilesX);
+	if (currTileX >= map.tilesX || currTileX < 0 || currTileY >= map.tilesY || currTileY < 0) return -1;
+	else return (currTileX + currTileY * map.tilesX);
 }
 
 bool SeedClass::UseItem(Camera2D& camera, Vector2& playerPos, Map& map, int* facingDir) {
@@ -188,7 +190,7 @@ bool HoeClass::UseItem(Camera2D& camera, Vector2& playerPos, Map& map, int* faci
 	if (tileIndex == -1 || !map.tiles[tileIndex].canBeTilled) return false;
 
 	map.tiles[tileIndex].isTilled = true;
-	map.tiles[tileIndex].groundSource = Rectangle(6 * map.tileSize, map.tileSize, map.tileSize, map.tileSize);
+	map.tiles[tileIndex].groundSource = Rectangle(static_cast<float>(6 * map.tileSize), static_cast<float>(map.tileSize), static_cast<float>(map.tileSize), static_cast<float>(map.tileSize));
 
 	return true;
 }

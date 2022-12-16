@@ -37,15 +37,15 @@ Map::Map(Entity* player) {
 		}
 		else if (preMap[i] == 1) {
 			newTile.groundSource = WATER;
-			collisions.push_back(Rectangle((i % tilesX) * tileSize, (i / tilesY) * tileSize, tileSize, tileSize));
+			collisions.push_back(Rectangle(static_cast<float>((i % tilesX) * tileSize), static_cast<float>((i / tilesY) * tileSize), static_cast<float>(tileSize), static_cast<float>(tileSize)));
 			std::cout << collisions.back().x << std::endl;
 		}
 		else if (preMap[i] == 2) {
-			collisions.push_back(Rectangle((i % tilesX) * tileSize, (i / tilesY) * tileSize, tileSize, tileSize));
+			collisions.push_back(Rectangle(static_cast<float>((i % tilesX) * tileSize), static_cast<float>((i / tilesY) * tileSize), static_cast<float>(tileSize), static_cast<float>(tileSize)));
 
 			Bed newBed;
-			newBed.position = Vector2((i % tilesX) * tileSize, (i / tilesY) * tileSize);
-			newBed.renderPos = Vector2((i % tilesX) * tileSize, ((i / tilesY) - 1) * tileSize);
+			newBed.position = Vector2(static_cast<float>((i % tilesX) * tileSize), static_cast<float>((i / tilesY) * tileSize));
+			newBed.renderPos = Vector2(static_cast<float>((i % tilesX) * tileSize), static_cast<float>(((i / tilesY) - 1) * tileSize));
 			newBed.spriteSheet = &furnitureSpriteSheet;
 			newBed.map = this;
 			newBed.collisionBox = &collisions.back();
@@ -57,7 +57,7 @@ Map::Map(Entity* player) {
 			newTile.entity = &beds.back();
 		}
 		else if (preMap[i] == 3) {
-			MarketStall sellStall(&marketStallTexture, Vector2((i % tilesX) * tileSize, (i / tilesY) * tileSize));
+			MarketStall sellStall(&marketStallTexture, Vector2(static_cast<float>((i % tilesX) * tileSize), static_cast<float>((i / tilesY) * tileSize)));
 			marketStalls.push_back(sellStall);
 			entities.push_back(&marketStalls.back());
 
@@ -109,7 +109,7 @@ void Map::RemoveDeadEntities() {
 }
 
 void Map::PlantSeed(int tileIndex, int id) {
-	Plant newPlant{id, &plantSpriteSheet, Vector2((tileIndex % tilesY) * tileSize, (tileIndex / tilesY) * tileSize), &tiles[tileIndex]};
+	Plant newPlant{id, &plantSpriteSheet, Vector2(static_cast<float>((tileIndex % tilesY) * tileSize), static_cast<float>((tileIndex / tilesY) * tileSize)), &tiles[tileIndex]};
 
 	plants.push_back(newPlant);
 	entities.push_back(&plants.back());
@@ -135,7 +135,7 @@ void Map::RenderGround(Camera2D* camera) {
 
 	for (int y = minY; y < maxY; ++y) {
 		for (int x = minX; x < maxX; ++x) {
-			DrawTextureRec(spriteSheet, tiles[y * tilesX + x].groundSource, Vector2(x * tileSize, y * tileSize), tiles[y * tilesX + x].groundTint);
+			DrawTextureRec(spriteSheet, tiles[y * tilesX + x].groundSource, Vector2(static_cast<float>(x * tileSize), static_cast<float>(y * tileSize)), tiles[y * tilesX + x].groundTint);
 		}
 	}
 }

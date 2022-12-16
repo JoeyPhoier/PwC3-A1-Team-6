@@ -6,10 +6,9 @@
 #include <list>
 
 
-#define GRASS Rectangle(tileSize, tileSize, tileSize, tileSize)
-#define WATER Rectangle(11 * tileSize, tileSize, tileSize, tileSize)
-#define DIRT  Rectangle(6 * tileSize, tileSize, tileSize, tileSize)
-#define TREE  Rectangle(0, 10 * tileSize, tileSize, 2 * tileSize)
+#define GRASS Rectangle(static_cast<float>(tileSize), static_cast<float>(tileSize), static_cast<float>(tileSize), static_cast<float>(tileSize))
+#define WATER Rectangle(static_cast<float>(11 * tileSize), static_cast<float>(tileSize), static_cast<float>(tileSize), static_cast<float>(tileSize))
+#define DIRT  Rectangle(static_cast<float>(6 * tileSize), static_cast<float>(tileSize), static_cast<float>(tileSize), static_cast<float>(tileSize))
 
 
 class Entity;

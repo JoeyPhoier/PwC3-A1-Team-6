@@ -1,6 +1,9 @@
 #include "player.h"
 #include "JCC_tools.h"
 
+Player::~Player() {
+    UnloadTexture(spriteSheet);
+}
 
 
 void Player::Update(Map& map, Camera2D& camera) {
@@ -19,7 +22,7 @@ void Player::Update(Map& map, Camera2D& camera) {
     else if (IsKeyPressed(KEY_ZERO)) inventory.selectedIndex = 9;
 
 
-    if (IsKeyUp(KEY_LEFT_CONTROL)) inventory.selectedIndex -= GetMouseWheelMove();  //Probably needs some smoothing
+    if (IsKeyUp(KEY_LEFT_CONTROL)) inventory.selectedIndex -= static_cast<int>(GetMouseWheelMove());  //Probably needs some smoothing
     if (inventory.selectedIndex > 9) inventory.selectedIndex = 0;
     else if (inventory.selectedIndex < 0) inventory.selectedIndex = 9;
 

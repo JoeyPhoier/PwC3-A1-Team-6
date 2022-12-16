@@ -12,7 +12,7 @@ class Inventory;
 class Entity {
 public:
 	Vector2 position = Vector2(0, 0); // Used for rendering order, could maybe use collisionBox instead
-	Rectangle* collisionBox;
+	Rectangle* collisionBox = nullptr;
 	bool isDead = false;
 
 	virtual void UpdateNewDay() {};
@@ -24,9 +24,9 @@ public:
 class TileEntity : public Entity {
 public:
 	Tile* parent = nullptr;
-	Vector2 renderPos;
-	Texture2D* spriteSheet;
-	Rectangle textureSource;
+	Vector2 renderPos = Vector2(0, 0);
+	Texture2D* spriteSheet = nullptr;
+	Rectangle textureSource = {0, 0, 0, 0};
 	
 	
 	void Render();

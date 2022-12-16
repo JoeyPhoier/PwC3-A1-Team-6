@@ -12,7 +12,7 @@ Use the bed to pass each day, and try to gather as much money as possible!
 
 Controls:
 
-F11 or alt+Enter to enter fullscreen mode
+F11 or alt+Enter to enter fullscreen mode.
 WASD to move
 Left click to use item
 Right click to harvest crops and interact with objects & stores

@@ -31,27 +31,30 @@ Map::Map(Entity* player) {
 			newTile.groundSource = GRASS;
 			newTile.canBeTilled = true;
 		}
-		else {
+		else if (preMap[i] == 1) {
 			newTile.groundSource = WATER;
 			collisions.push_back(Rectangle((i % tilesX) * tileSize, (i / tilesY) * tileSize, tileSize, tileSize));
 			std::cout << collisions.back().x << std::endl;
 		}
+		else {
+			collisions.push_back(Rectangle((i % tilesX) * tileSize, (i / tilesY) * tileSize, tileSize, tileSize));
+
+			Bed newBed;
+			newBed.position = Vector2((i % tilesX) * tileSize, (i / tilesY) * tileSize);
+			newBed.renderPos = Vector2((i % tilesX) * tileSize, ((i / tilesY) - 1) * tileSize);
+			newBed.spriteSheet = &furnitureSpriteSheet;
+			newBed.map = this;
+			newBed.collisionBox = &collisions.back();
+			beds.push_back(newBed);
+			entities.push_back(&beds.back());
+			
+			newTile.groundSource = GRASS;
+			newTile.canBeTilled = false;
+			newTile.entity = &beds.back();
+		}
 
 		tiles.push_back(newTile);
 	}
-	
-	Bed newBed;
-	newBed.position = Vector2(3 * tileSize, 3 * tileSize);
-	newBed.renderPos = Vector2(3 * tileSize, 2 * tileSize);
-	newBed.spriteSheet = &furnitureSpriteSheet;
-	newBed.parent = &tiles[3 * tilesX + 3];
-	newBed.map = this;
-	beds.push_back(newBed);
-	entities.push_back(&beds.back());
-
-	tiles[3 * tilesX + 3].groundSource = GRASS;
-	tiles[3 * tilesX + 3].canBeTilled = false;
-	tiles[3 * tilesX + 3].entity = &beds.back();
 
 	entities.push_back(player);
 

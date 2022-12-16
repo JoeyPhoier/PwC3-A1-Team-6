@@ -86,6 +86,9 @@ void Player::Update(Map& map, Camera2D& camera) {
             }
         }
     }
+    else if (IsMouseButtonPressed(1)) {
+        map.tiles[TileIndex(camera, position, map, &facingDir, true)].Interact(&inventory, &map);
+    }
 
 }
 

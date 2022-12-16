@@ -12,7 +12,7 @@ class Inventory;
 class Entity {
 public:
 	Vector2 position = Vector2(0, 0); // Used for rendering order, could maybe use collisionBox instead
-	Rectangle collisionBox;
+	Rectangle* collisionBox;
 	bool isDead = false;
 
 

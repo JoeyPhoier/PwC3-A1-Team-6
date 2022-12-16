@@ -9,6 +9,8 @@
 
 class Map;
 
+int TileIndex(Camera2D& camera, Vector2& playerPos, Map& map, int* facingDir, bool canTargetCurrTile);
+
 enum ItemType { NaN, Fruit, Vegetable, Seed, Tool, Hoe, WateringCan };
 
 class Item {										//Might need to make some subclasses for added info, such as a seed subclass

@@ -9,6 +9,14 @@ Inventory::Inventory() {
 	for (int i = 0; i < invLim; i++) {
 		slot[i] = nullptr;
 	}
+
+	Image tempImage = LoadImage("assets/items/items free.png");
+	ImageResize(&tempImage, 200, 120);
+	vegetableSpriteSheet = LoadTextureFromImage(tempImage);
+	UnloadImage(tempImage);
+	//vegetableSpriteSheet = LoadTexture("assets/items/items free.png");
+	hoeSprite = LoadTexture("assets/items/tools/Hoe.png");
+	wateringCanSprite = LoadTexture("assets/items/tools/Watering Can.png");
 }
 
 Inventory::~Inventory() {
@@ -16,6 +24,10 @@ Inventory::~Inventory() {
 		delete slot[i];
 		slot[i] = nullptr;
 	}
+
+	UnloadTexture(vegetableSpriteSheet);
+	UnloadTexture(hoeSprite);
+	UnloadTexture(wateringCanSprite);
 }
 
 bool Inventory::AddItem(int id) {

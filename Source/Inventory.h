@@ -23,19 +23,22 @@ public:												//that holds both the in-inventory sprite and the overworld s
 	int currStack = 1;								//REMEMBER TO CHANGE "AddItem()" IF THE ABOVE GETS IMPLEMENTED.
 	bool isSellable = true;
 	int value = 0;
-	Texture2D sprite;
+	Texture2D* sprite;
+	Rectangle spriteSource;
 
-	Item(int idi, std::string namei, int valuei, Texture2D spritei) {	//move to .cpp
+	Item(int idi, std::string namei, int valuei, Texture2D* spritei, Rectangle spriteSourcei) {	//move to .cpp
 		id = idi;
 		name = namei;
 		value = valuei;
 		sprite = spritei;
+		spriteSource = spriteSourcei;
 	};
 	Item(Item& item) {
 		id = item.id;
 		name = item.name;
 		value = item.value;
 		sprite = item.sprite;
+		spriteSource = item.spriteSource;
 	}
 
 	virtual bool UseItem(Camera2D& camera, Vector2& playerPos, Map& map, int* facingDir) {
@@ -47,7 +50,7 @@ public:												//that holds both the in-inventory sprite and the overworld s
 
 class VegetableClass : public Item {
 public:
-	VegetableClass(int idi, std::string namei, int valuei, Texture2D spritei) :Item(idi, namei, valuei, spritei) {
+	VegetableClass(int idi, std::string namei, int valuei, Texture2D* spritei, Rectangle spriteSourcei) :Item(idi, namei, valuei, spritei, spriteSourcei) {
 		type = Vegetable;
 	}
 	VegetableClass(Item& item) : Item(item) { type = Vegetable; }
@@ -55,7 +58,7 @@ public:
 
 class SeedClass : public Item {
 public:
-	SeedClass(int idi, std::string namei, int valuei, Texture2D spritei) :Item(idi, namei, valuei, spritei) {	//move to .cpp
+	SeedClass(int idi, std::string namei, int valuei, Texture2D* spritei, Rectangle spriteSourcei) :Item(idi, namei, valuei, spritei, spriteSourcei) {	//move to .cpp
 		type = Seed;
 	}
 	SeedClass(Item& item) : Item(item) { type = Seed; }
@@ -64,7 +67,7 @@ public:
 
 class ToolClass : public Item {
 public:
-	ToolClass(int idi, std::string namei,Texture2D spritei) :Item(idi, namei, 0, spritei) {
+	ToolClass(int idi, std::string namei,Texture2D* spritei, Rectangle spriteSourcei) :Item(idi, namei, 0, spritei, spriteSourcei) {
 		type = Tool;
 		isStackable = false;
 		isSellable = false;
@@ -78,14 +81,14 @@ public:
 
 class HoeClass : public ToolClass {
 public:
-	HoeClass(int idi, std::string namei, Texture2D spritei) :ToolClass(idi, namei, spritei) { type = Hoe; };
+	HoeClass(int idi, std::string namei, Texture2D* spritei, Rectangle spriteSourcei) :ToolClass(idi, namei, spritei, spriteSourcei) { type = Hoe; };
 	HoeClass(Item& item) :ToolClass(item) { type = Hoe; };
 	bool UseItem(Camera2D& camera, Vector2& playerPos, Map& map, int* facingDir);
 };
 
 class WateringCanClass : public ToolClass {
 public:
-	WateringCanClass(int idi, std::string namei, Texture2D spritei) :ToolClass(idi, namei, spritei) { type = WateringCan; };
+	WateringCanClass(int idi, std::string namei, Texture2D* spritei, Rectangle spriteSourcei) :ToolClass(idi, namei, spritei, spriteSourcei) { type = WateringCan; };
 	WateringCanClass(Item& item) :ToolClass(item) { type = WateringCan; };
 	bool UseItem(Camera2D& camera, Vector2& playerPos, Map& map, int* facingDir);
 };
@@ -95,6 +98,9 @@ public:
 	std::array<Item*, 10> slot;						//Using Item** might make inventory expansion easier
 	int invLim = slot.size();
 	int selectedIndex = 0;
+	Texture2D vegetableSpriteSheet;
+	Texture2D hoeSprite;
+	Texture2D wateringCanSprite;
 	Inventory();
 	~Inventory();
 
@@ -109,49 +115,87 @@ public:
 		//I was thinking of reserving the indexes in 100's, so plants got the first 100, then tools got the next 100, and so on.
 		//This would help in case we'd like to have new items have a similar id to others of their type, without having
 		//to reorder every following item in the list.
-		{1,new VegetableClass{								//Kinda dumb how this works, but aggregate initialization
+		{1,new VegetableClass(								//Kinda dumb how this works, but aggregate initialization
 			1,												//doesn't work for subclass, nor for classes with virtual funcs.
-			"Parsnip",										//Cant use designated parameters for constructors either :(
+			"Pumpkin",										//Cant use designated parameters for constructors either :(
 			//.stackLim = 64,
-			35,
-			LoadTexture("assets/items/carrot.png")
-			}	
+			70,
+			&vegetableSpriteSheet,
+			Rectangle(0, 0, 40, 40)
+			)	
 		},
 		{2,new VegetableClass(
 			2,
 			"Carrot",
 			//.stackLim = 64,
 			50,
-			LoadTexture("assets/items/carrot.png")
+			&vegetableSpriteSheet,
+			Rectangle(80, 0, 40, 40)
 			)
 		},
-		//{101,new Item{
-		//	.id = 101,
-		//	.name = "Parsnip Seeds",
-		//	.type = Seed,
-		//	.isStackable = false,
-		//	.value = 10,
-		//	//.sprite = LoadTexture("assets/items/parsnip.png")
-		//	}
+		{3,new VegetableClass(
+			3,
+			"Potato",
+			//.stackLim = 64,
+			35,
+			&vegetableSpriteSheet,
+			Rectangle(40, 0, 40, 40)
+			)
+		},
+		{4,new VegetableClass(
+			4,
+			"Tomato",
+			//.stackLim = 64,
+			40,
+			&vegetableSpriteSheet,
+			Rectangle(120, 0, 40, 40)
+			)
+		},
+		{101,new Item(
+			101,
+			"Pumpkin Seeds",
+			5,
+			&vegetableSpriteSheet,
+			Rectangle(0, 40, 40, 40)
+			)
 
-		//},
+		},
 		{102,new SeedClass(
 			102,
 			"Carrot Seeds",
 			3,
-			LoadTexture("assets/items/carrot seeds.png")
+			&vegetableSpriteSheet,
+			Rectangle(80, 40, 40, 40)
+			)
+		},
+		{103,new SeedClass(
+			103,
+			"Potato Seeds",
+			3,
+			&vegetableSpriteSheet,
+			Rectangle(40, 40, 40, 40)
+			)
+		},
+		{104,new SeedClass(
+			104,
+			"Tomato Seeds",
+			3,
+			&vegetableSpriteSheet,
+			Rectangle(120, 40, 40, 40)
 			)
 		},
 		{201,new HoeClass{									
 			201,									
 			"Copper Hoe",
-			LoadTexture("assets/items/tools/Hoe.png")
+			&hoeSprite,
+			Rectangle(0, 0, 40, 40)
 			}
 		},
 		{202, new WateringCanClass{
 			202,
 			"Watering Can",
-			LoadTexture("assets/items/tools/Watering Can.png")
+			&wateringCanSprite,
+			Rectangle(0, 0, 32, 32)
 			}
 		}
 		

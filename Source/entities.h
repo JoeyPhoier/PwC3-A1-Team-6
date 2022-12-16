@@ -15,7 +15,8 @@ public:
 	Rectangle* collisionBox;
 	bool isDead = false;
 
-
+	virtual void UpdateNewDay() {};
+	virtual void Interact(Inventory* inventory) {};
 	virtual void Render() {};
 
 };
@@ -24,9 +25,11 @@ class TileEntity : public Entity {
 public:
 	Tile* parent = nullptr;
 	Vector2 renderPos;
+	Texture2D* spriteSheet;
+	Rectangle textureSource;
 	
-	virtual void UpdateNewDay() = 0;
-	virtual void Interact(Inventory* inventory) = 0;
+	
+	void Render();
 
 };
 
@@ -34,27 +37,32 @@ class Plant : public TileEntity {
 public:
 	int id;
 	int lootId;
-	Texture2D* spriteSheet;
-	Rectangle textureSource;
 	int growthStage = 0;
 	int maxGrowthStage;
 
 	Plant(int idi, Texture2D* spriteSheeti, Vector2 positioni, Tile* parenti);
 
 	void UpdateNewDay();
-	void Interact(Inventory* inventory);
-	void Render();
+	virtual void Interact(Inventory* inventory);
+
 
 };
 
 class Bed : public TileEntity {
 public:
-	Texture2D* spriteSheet;
-	Rectangle textureSource = {0, 64, 64, 128};
 	Map* map = nullptr;
 
+	Bed();
+	~Bed();
 	void UpdateNewDay();
-	void Interact(Inventory* inventory);
-	void Render();
+	void Interact(Inventory* inventory) ;
 
+};
+
+class MarketStall : public TileEntity {
+public:
+	MarketStall(Texture2D* spriteSheeti, Vector2 renderPosi);
+	~MarketStall();
+	void Interact(Inventory* inventory);
+	void UpdateNewDay() {};
 };

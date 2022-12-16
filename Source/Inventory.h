@@ -98,6 +98,15 @@ public:
 	std::array<Item*, 10> slot;						//Using Item** might make inventory expansion easier
 	int invLim = slot.size();
 	int selectedIndex = 0;
+	int currMoney = 0;
+	int preMoney = 0;
+
+
+	void GetMoney(int& amount);
+	void GetPreMoney(int& amount);
+	void LoseMoney(int& amount);
+	void LosePreMoney(int& amount);
+
 	Texture2D vegetableSpriteSheet;
 	Texture2D hoeSprite;
 	Texture2D wateringCanSprite;

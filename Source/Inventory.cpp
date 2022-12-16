@@ -5,6 +5,24 @@
 
 enum Direction { Down, Up, Left, Right };
 
+void Inventory::GetMoney(int& amount) {
+	currMoney += amount;
+}
+
+void Inventory::GetPreMoney(int& amount) {
+	preMoney += amount;
+}
+
+void Inventory::LoseMoney(int& amount) {
+	currMoney -= amount;
+	if (currMoney < 0) currMoney = 0;
+}
+
+void Inventory::LosePreMoney(int& amount) {
+	preMoney -= amount;
+	if (preMoney < 0) preMoney = 0;
+}
+
 Inventory::Inventory() {
 	for (int i = 0; i < invLim; i++) {
 		slot[i] = nullptr;

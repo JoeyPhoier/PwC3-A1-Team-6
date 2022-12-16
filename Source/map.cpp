@@ -15,6 +15,8 @@ void Tile::Interact(Inventory* inventory, Map* map) {
 Map::Map(Entity* player) {
 	
 	spriteSheet = LoadTexture("assets/RPGpack_sheet.png");
+	marketStallTexture = LoadTexture("assets/marketplace_stall.png");
+	//marketStallTexture = LoadTexture("assets/items/carrot.png");
 
 	Image tempImage = LoadImage("assets/plants_free.png");
 	ImageResize(&tempImage, 320, 384);
@@ -38,7 +40,7 @@ Map::Map(Entity* player) {
 			collisions.push_back(Rectangle((i % tilesX) * tileSize, (i / tilesY) * tileSize, tileSize, tileSize));
 			std::cout << collisions.back().x << std::endl;
 		}
-		else {
+		else if (preMap[i] == 2) {
 			collisions.push_back(Rectangle((i % tilesX) * tileSize, (i / tilesY) * tileSize, tileSize, tileSize));
 
 			Bed newBed;
@@ -49,10 +51,19 @@ Map::Map(Entity* player) {
 			newBed.collisionBox = &collisions.back();
 			beds.push_back(newBed);
 			entities.push_back(&beds.back());
-			
+
 			newTile.groundSource = GRASS;
 			newTile.canBeTilled = false;
 			newTile.entity = &beds.back();
+		}
+		else if (preMap[i] == 3) {
+			MarketStall sellStall(&marketStallTexture, Vector2((i % tilesX) * tileSize, (i / tilesY) * tileSize));
+			marketStalls.push_back(sellStall);
+			entities.push_back(&marketStalls.back());
+
+			newTile.groundSource = GRASS;
+			newTile.canBeTilled = false;
+			newTile.entity = &marketStalls.back();;
 		}
 
 		tiles.push_back(newTile);

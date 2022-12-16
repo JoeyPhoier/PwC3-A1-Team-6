@@ -26,7 +26,7 @@ public:
     Rectangle groundSource{0};
     Color groundTint = WHITE;
     
-    TileEntity* entity = nullptr;
+    Entity* entity = nullptr;
     
     bool canBeTilled = false;
     bool isTilled = false;
@@ -58,7 +58,7 @@ public:
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,
@@ -87,6 +87,9 @@ public:
 
     std::list<Bed> beds = {};
     Texture2D furnitureSpriteSheet;
+
+	std::list<class MarketStall> marketStalls = {};
+	Texture2D marketStallTexture;
 
     std::vector<Entity*> entities = {};
 

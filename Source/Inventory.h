@@ -22,27 +22,29 @@ public:												//that holds both the in-inventory sprite and the overworld s
 	//int stackLim;									//In the game, maxStack is 999. We could try lower numbers similar to minecraft.
 	int currStack = 1;								//REMEMBER TO CHANGE "AddItem()" IF THE ABOVE GETS IMPLEMENTED.
 	bool isSellable = true;
-	int value = 0;
+	int sellValue = 0;
+	int buyValue = 0;
 	Texture2D* sprite;
 	Rectangle spriteSource;
 
-	Item(int idi, std::string namei, int valuei, Texture2D* spritei, Rectangle spriteSourcei) {	//move to .cpp
+	Item(int idi, std::string namei, int sellValuei, int buyValuei, Texture2D* spritei, Rectangle spriteSourcei) {	//move to .cpp
 		id = idi;
 		name = namei;
-		value = valuei;
+		sellValue = sellValuei;
+		buyValue = buyValuei;
 		sprite = spritei;
 		spriteSource = spriteSourcei;
 	};
 	Item(Item& item) {
 		id = item.id;
 		name = item.name;
-		value = item.value;
+		sellValue = item.sellValue;
+		buyValue = item.buyValue;
 		sprite = item.sprite;
 		spriteSource = item.spriteSource;
 	}
 
 	virtual bool UseItem(Camera2D& camera, Vector2& playerPos, Map& map, int* facingDir) {
-		currStack--;
 		return true;
 	};
 
@@ -50,7 +52,7 @@ public:												//that holds both the in-inventory sprite and the overworld s
 
 class VegetableClass : public Item {
 public:
-	VegetableClass(int idi, std::string namei, int valuei, Texture2D* spritei, Rectangle spriteSourcei) :Item(idi, namei, valuei, spritei, spriteSourcei) {
+	VegetableClass(int idi, std::string namei, int sellValuei, int buyValuei, Texture2D* spritei, Rectangle spriteSourcei) :Item(idi, namei, sellValuei, 0, spritei, spriteSourcei) {
 		type = Vegetable;
 	}
 	VegetableClass(Item& item) : Item(item) { type = Vegetable; }
@@ -58,16 +60,17 @@ public:
 
 class SeedClass : public Item {
 public:
-	SeedClass(int idi, std::string namei, int valuei, Texture2D* spritei, Rectangle spriteSourcei) :Item(idi, namei, valuei, spritei, spriteSourcei) {	//move to .cpp
+	SeedClass(int idi, std::string namei, int buyValuei, Texture2D* spritei, Rectangle spriteSourcei) :Item(idi, namei, 0, buyValuei, spritei, spriteSourcei) {	//move to .cpp
 		type = Seed;
+		isSellable = false;
 	}
-	SeedClass(Item& item) : Item(item) { type = Seed; }
+	SeedClass(Item& item) : Item(item) { type = Seed; isSellable = false; }
 	bool UseItem(Camera2D& camera, Vector2& playerPos, Map& map, int* facingDir);
 };
 
 class ToolClass : public Item {
 public:
-	ToolClass(int idi, std::string namei,Texture2D* spritei, Rectangle spriteSourcei) :Item(idi, namei, 0, spritei, spriteSourcei) {
+	ToolClass(int idi, std::string namei,Texture2D* spritei, Rectangle spriteSourcei) :Item(idi, namei, 0, 0, spritei, spriteSourcei) {
 		type = Tool;
 		isStackable = false;
 		isSellable = false;
@@ -128,6 +131,7 @@ public:
 			1,												//doesn't work for subclass, nor for classes with virtual funcs.
 			"Pumpkin",										//Cant use designated parameters for constructors either :(
 			//.stackLim = 64,
+			30,
 			70,
 			&vegetableSpriteSheet,
 			Rectangle(0, 0, 40, 40)
@@ -137,7 +141,8 @@ public:
 			2,
 			"Carrot",
 			//.stackLim = 64,
-			50,
+			10,
+			25,
 			&vegetableSpriteSheet,
 			Rectangle(80, 0, 40, 40)
 			)
@@ -146,7 +151,8 @@ public:
 			3,
 			"Potato",
 			//.stackLim = 64,
-			35,
+			5,
+			12,
 			&vegetableSpriteSheet,
 			Rectangle(40, 0, 40, 40)
 			)
@@ -155,15 +161,16 @@ public:
 			4,
 			"Tomato",
 			//.stackLim = 64,
+			22,
 			40,
 			&vegetableSpriteSheet,
 			Rectangle(120, 0, 40, 40)
 			)
 		},
-		{101,new Item(
+		{101,new SeedClass(
 			101,
 			"Pumpkin Seeds",
-			5,
+			16,
 			&vegetableSpriteSheet,
 			Rectangle(0, 40, 40, 40)
 			)
@@ -172,7 +179,7 @@ public:
 		{102,new SeedClass(
 			102,
 			"Carrot Seeds",
-			3,
+			5,
 			&vegetableSpriteSheet,
 			Rectangle(80, 40, 40, 40)
 			)
@@ -188,7 +195,7 @@ public:
 		{104,new SeedClass(
 			104,
 			"Tomato Seeds",
-			3,
+			10,
 			&vegetableSpriteSheet,
 			Rectangle(120, 40, 40, 40)
 			)

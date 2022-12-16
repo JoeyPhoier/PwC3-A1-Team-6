@@ -59,10 +59,19 @@ public:
 
 };
 
-class MarketStall : public TileEntity {
+class SellingStall : public TileEntity {
 public:
-	MarketStall(Texture2D* spriteSheeti, Vector2 renderPosi);
-	~MarketStall();
+	SellingStall(Texture2D* spriteSheeti, Vector2 renderPosi);
+	~SellingStall();
+	void Interact(Inventory* inventory);
+	void UpdateNewDay() {};
+};
+
+class BuyingStall : public TileEntity {
+public:
+	int seedId;
+	BuyingStall(Texture2D* spriteSheeti, Vector2 renderPosi, int seedIdi);
+	~BuyingStall() {};
 	void Interact(Inventory* inventory);
 	void UpdateNewDay() {};
 };

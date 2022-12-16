@@ -14,19 +14,19 @@ Plant::Plant(int idi, Texture2D* spriteSheeti, Vector2 positioni, Tile* parenti)
 	switch (idi) {
 	case 101:
 		textureSource = Rectangle(0, 0, 64, 64);
-		maxGrowthStage = 16;
+		maxGrowthStage = 12;
 		break;
 	case 102:
 		textureSource = Rectangle(0, 64, 64, 64);
-		maxGrowthStage = 12;
+		maxGrowthStage = 6;
 		break;
 	case 103:
 		textureSource = Rectangle(0, 128, 64, 64);
-		maxGrowthStage = 9;
+		maxGrowthStage = 4;
 		break;
 	case 104:
 		textureSource = Rectangle(0, 192, 64, 64);
-		maxGrowthStage = 10;
+		maxGrowthStage = 8;
 		break;
 	default:
 		textureSource = Rectangle(0, 0, 0, 0);
@@ -79,27 +79,57 @@ void Bed::Interact(Inventory* inventory) {
 	map->UpdateNewDay();
 }
 
-MarketStall::MarketStall(Texture2D* spriteSheeti, Vector2 renderPosi) {
+SellingStall::SellingStall(Texture2D* spriteSheeti, Vector2 renderPosi) {
 	spriteSheet = spriteSheeti;
 	textureSource = Rectangle{ 0, 0, float(spriteSheet->width), float(spriteSheet->height)};
 	renderPos = Vector2(renderPosi.x - spriteSheet->width * 0.4f, renderPosi.y - spriteSheet->height * 0.55f);
 	position = renderPosi;
 }
 
-MarketStall::~MarketStall(){
+SellingStall::~SellingStall(){
 }
 
-void MarketStall::Interact(Inventory* inventory) {
-	std::cout << "GOOD SELL ITS WORKING" << std::endl;
+void SellingStall::Interact(Inventory* inventory) {
 	for(int i = 0; i < inventory->invLim; i++)
 	{
 		if (inventory->slot[i] != nullptr && inventory->slot[i]->isSellable) {
-			inventory->currMoney += inventory->slot[i]->currStack * inventory->slot[i]->value;
+			inventory->currMoney += inventory->slot[i]->currStack * inventory->slot[i]->sellValue;
 			delete inventory->slot[i];
 			inventory->slot[i] = nullptr;
 			
-
 		}
+	}
+}
+
+BuyingStall::BuyingStall(Texture2D* spriteSheeti, Vector2 renderPosi, int seedIdi) {
+	spriteSheet = spriteSheeti;
+	seedId = seedIdi;
+	int spritex = 0;
+	switch (seedIdi) {
+	case 101:
+		spritex = 0;
+		break;
+	case 102:
+		spritex = 128;
+		break;
+	case 103:
+		spritex = 64;
+		break;
+	case 104:
+		spritex = 192;
+		break;
+	}
+	textureSource = Rectangle{ float(spritex), 0, 64, float(spriteSheet->height) };
+	renderPos = Vector2(renderPosi.x, renderPosi.y);
+	position = renderPosi;
+}
+
+void BuyingStall::Interact(Inventory* inventory) {
+	if (inventory->currMoney >= inventory->itemDictionary[seedId]->buyValue) {
+
+		std::cout << inventory->itemDictionary[seedId]->buyValue << std::endl;
+		inventory->currMoney -= inventory->itemDictionary[seedId]->buyValue;
+		inventory->AddItem(seedId);
 	}
 }
 

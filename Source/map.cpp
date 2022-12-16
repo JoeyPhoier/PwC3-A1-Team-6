@@ -16,7 +16,7 @@ Map::Map(Entity* player) {
 	
 	spriteSheet = LoadTexture("assets/RPGpack_sheet.png");
 	marketStallTexture = LoadTexture("assets/marketplace_stall.png");
-	//marketStallTexture = LoadTexture("assets/items/carrot.png");
+	buyingStallTexture = LoadTexture("assets/Buying_rack 2.png");
 
 	plantSpriteSheet = LoadTexture("assets/plants_free.png");
 
@@ -50,13 +50,38 @@ Map::Map(Entity* player) {
 			newTile.entity = &beds.back();
 		}
 		else if (preMap[i] == 3) {
-			MarketStall sellStall(&marketStallTexture, Vector2(static_cast<float>((i % tilesX) * tileSize), static_cast<float>((i / tilesY) * tileSize)));
+			SellingStall sellStall(&marketStallTexture, Vector2(static_cast<float>((i % tilesX) * tileSize), static_cast<float>((i / tilesY) * tileSize)));
 			marketStalls.push_back(sellStall);
 			entities.push_back(&marketStalls.back());
 
 			newTile.groundSource = GRASS;
 			newTile.canBeTilled = false;
 			newTile.entity = &marketStalls.back();;
+		}
+		else if (preMap[i] >= 4 && preMap[i] <= 7) {
+			int seedId = 0;
+			switch (preMap[i]) {
+			case 4:
+				seedId = 101;
+				break;
+			case 5:
+				seedId = 103;
+				break;
+			case 6:
+				seedId = 102;
+				break;
+			case 7:
+				seedId = 104;
+				break;
+			}
+			BuyingStall buyStall(&buyingStallTexture, Vector2(static_cast<float>((i % tilesX) * tileSize), static_cast<float>((i / tilesY) * tileSize)), seedId);
+			buyingStalls.push_back(buyStall);
+			entities.push_back(&buyingStalls.back());
+
+			newTile.groundSource = GRASS;
+			newTile.canBeTilled = false;
+			newTile.entity = &buyingStalls.back();;
+
 		}
 
 		tiles.push_back(newTile);

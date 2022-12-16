@@ -193,6 +193,8 @@ void DrawGui(Screen& screen, Player& player) {
             }
         }
     }
+
+    DrawText(TextFormat("Gold: %i", player.inventory.currMoney), 40 , 30, 40, YELLOW);
    
 
 }

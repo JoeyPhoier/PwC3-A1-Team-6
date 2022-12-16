@@ -32,9 +32,37 @@ void Player::Update(Map& map, Camera2D& camera) {
     else isMoving = true;
 
     if ((movDir.x != 0 || movDir.y != 0) && isMoving) {
-        NormalVect(movDir);                            
-        position.x += movDir.x * walkingspeed;
-        position.y += movDir.y * walkingspeed;
+        NormalVect(movDir);
+        bool canMoveX = true;
+        bool canMoveY = true;
+        for(Rectangle i : map.collisions){
+            if (CheckCollisionPointRec(Vector2(position.x + movDir.x * walkingspeed, position.y), i)){
+                canMoveX = false;
+                isMoving = false;
+            };
+            if (CheckCollisionPointRec(Vector2(position.x, position.y + movDir.y * walkingspeed), i)){
+                canMoveY = false;
+                isMoving = false;
+            };
+        }
+        if (position.x + movDir.x * walkingspeed < spriteSize * 0.15f || position.x + movDir.x * walkingspeed > map.tilesX * map.tileSize - spriteSize * 0.15f) {
+            canMoveX = false;
+            isMoving = false;
+        }
+        if (position.y + movDir.y * walkingspeed < spriteSize * 0.3f || position.y + movDir.y * walkingspeed > map.tilesY * map.tileSize - spriteSize * 0.05f) {
+            canMoveY = false;
+            isMoving = false;
+        }
+        if (canMoveX && movDir.x != 0)
+        {
+            position.x += movDir.x * walkingspeed;
+            isMoving = true;
+        }
+        if (canMoveY && movDir.y != 0)
+        {
+            position.y += movDir.y * walkingspeed;
+            isMoving = true;
+        }
     }
     
     if (IsMouseButtonPressed(0)) {
@@ -51,7 +79,7 @@ void Player::Update(Map& map, Camera2D& camera) {
                 SpriteCont = 8;
                 break;
             }
-            inventory.slot[inventory.selectedIndex]->UseItem(camera, map, &facingDir);
+            inventory.slot[inventory.selectedIndex]->UseItem(camera, position, map, &facingDir);
             if (inventory.slot[inventory.selectedIndex]->currStack == 0) {
                 delete inventory.slot[inventory.selectedIndex];
                 inventory.slot[inventory.selectedIndex] = nullptr;

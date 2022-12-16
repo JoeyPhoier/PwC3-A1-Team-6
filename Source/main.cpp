@@ -40,8 +40,8 @@ public:
     int currWidth;
     int currHeight;
     float unscalezoom = 1.0f;
-    float maxzoom = 3.0f;
-    float minzoom = 0.25f;
+    float maxzoom = 1.5f;
+    float minzoom = 0.5f;
 };
 
 //----------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ public:
 //----------------------------------------------------------------------------------
 
 //void PlayerUpdate(Player& player, Map& map, Camera2D& camera);
-void CameraUpdate(Camera2D& camera, Player& player, Screen& screen);
+void CameraUpdate(Camera2D& camera, Player& player, Screen& screen, Map& map);
 void DrawGui(Screen& screen, Player& player);
 //void RenderPlayer(Player& player);
 
@@ -122,7 +122,7 @@ int main(void)
         
 
         player.Update(map, camera);
-        CameraUpdate(camera, player, screen);
+        CameraUpdate(camera, player, screen, map);
         map.RemoveDeadEntities();
 
 
@@ -152,17 +152,29 @@ int main(void)
 }
 
 
-void CameraUpdate(Camera2D& camera, Player& player, Screen& screen) {
-    camera.offset = Vector2(screen.currWidth/2, screen.currHeight / 2);
-    camera.target = player.position;
+void CameraUpdate(Camera2D& camera, Player& player, Screen& screen, Map& map) {
     
     if(IsKeyDown(KEY_LEFT_CONTROL)) screen.unscalezoom += (GetMouseWheelMove() * 0.05f);
     float screenscale = (screen.currWidth / screen.windowedWidth);
     if (screen.unscalezoom > screen.maxzoom) screen.unscalezoom = screen.maxzoom;
     else if (screen.unscalezoom < screen.minzoom) screen.unscalezoom = screen.minzoom;
 
-    camera.zoom = screen.unscalezoom * screenscale;               //Breaking down zoom into unscale zoom and screenscale ensures
-}                                                                 //the same viewport is rendered independent of window size.
+    camera.zoom = screen.unscalezoom * screenscale;     //Breaking down zoom into unscale zoom and screenscale ensures
+                                                        //the same viewport is rendered independent of window size.
+
+    camera.offset = Vector2(screen.currWidth/2, screen.currHeight / 2);
+    camera.target = player.position;
+
+    Vector2 stw = GetScreenToWorld2D(Vector2(0,0), camera);
+    if (stw.x < 0) camera.target.x = camera.offset.x / camera.zoom;
+    if (stw.y < 0) camera.target.y = camera.offset.y / camera.zoom;
+
+    stw = GetScreenToWorld2D(Vector2(screen.currWidth, screen.currHeight), camera);
+    if (stw.x > map.tilesX * map.tileSize) camera.target.x = map.tilesX * map.tileSize - camera.offset.x / camera.zoom;
+    if (stw.y > map.tilesY * map.tileSize) camera.target.y = map.tilesY * map.tileSize - camera.offset.y / camera.zoom;
+
+}                                                                 
+
 
 void DrawGui(Screen& screen, Player& player) {
     for(int i = 0; i < 10; i++) {

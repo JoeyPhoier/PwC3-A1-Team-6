@@ -2,9 +2,7 @@
 #include "JCC_tools.h"
 #include <iostream>
 
-void jccDrawTexture(Texture2D texture, int width, int y) {
-
-}
+//Jcc stands for "Joey, Charles & Ciaran" :)
 
 float jccTruncate(float number, int digitsAfterZero) {
 	int scaler = 1;

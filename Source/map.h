@@ -90,6 +90,8 @@ public:
 
     std::vector<Entity*> entities = {};
 
+	std::list<Rectangle> collisions = {};
+
     
     Map(Entity* player);
 

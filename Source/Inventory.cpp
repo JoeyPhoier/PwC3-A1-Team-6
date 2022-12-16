@@ -85,60 +85,65 @@ bool Inventory::RemoveItem(int id, int amount) {
 	return didLastFuncPass;
 }
 
-int TileIndex(Camera2D& camera, Map& map, int* facingDir, bool canTargetCurrTile = 0) {
-	int tileCoorX = (camera.target.x) / (map.tileSize * camera.zoom);
-	int tileCoorY = (camera.target.y) / (map.tileSize * camera.zoom);
+int TileIndex(Camera2D& camera, Vector2& playerPos, Map& map, int* facingDir, bool canTargetCurrTile = 0) {
+	Vector2 currTile{ int((playerPos.x) / (map.tileSize)),int((playerPos.y) / (map.tileSize)) };
+	Vector2 mouseCoor = GetScreenToWorld2D(GetMousePosition(), camera);
 
-	int mouseCoorX = int((GetMouseX() - camera.offset.x + camera.target.x) / (map.tileSize * camera.zoom)) - tileCoorX;
-	int mouseCoorY = int((GetMouseY() - camera.offset.y + camera.target.y) / (map.tileSize * camera.zoom)) - tileCoorY;
+	mouseCoor.x = int (mouseCoor.x / map.tileSize);
+	mouseCoor.y = int (mouseCoor.y / map.tileSize);
+	std::cout << mouseCoor.x << std::endl;
 
+	int deltax = mouseCoor.x - currTile.x;
+	int deltay = mouseCoor.y - currTile.y;
+	//int mouseCoorX = int((GetMouseX() - camera.offset.x + camera.target.x) / (map.tileSize * camera.zoom)) - tileCoorX;
+	//int mouseCoorY = int((GetMouseY() - camera.offset.y + camera.target.y) / (map.tileSize * camera.zoom)) - tileCoorY;
 
 
 	//This copies the way the tools in Stardew valley control;
 	//Uses the mouse if it is close to player, and otherwise uses the direction the player is facing.
-	if ((mouseCoorX <= 1 && mouseCoorX >= -1 && mouseCoorY <= 1 && mouseCoorY >= -1) && !(mouseCoorX == 0 && mouseCoorY == 0 && !canTargetCurrTile)) {
-		switch (mouseCoorX) {
+	if ((deltax <= 1 && deltax >= -1 && deltay <= 1 && deltay >= -1) && !(deltax == 0 && deltay == 0 && !canTargetCurrTile)) {
+		switch (deltax) {
 		case 1:
 			*facingDir = Right;
-			tileCoorX++;
+			currTile.x++;
 			break;
 		case -1:
 			*facingDir = Left;
-			tileCoorX--;
+			currTile.x--;
 		}
-		switch (mouseCoorY) {
+		switch (deltay) {
 		case 1:
 			*facingDir = Down;
-			tileCoorY++;
+			currTile.y++;
 			break;
 		case -1:
 			*facingDir = Up;
-			tileCoorY--;
+			currTile.y--;
 		}
 	}
 	else {
 		switch (*facingDir) {
 		case(2):
-			tileCoorX--;
+			currTile.x--;
 			break;
 		case(1):
-			tileCoorY--;
+			currTile.y--;
 			break;
 		case(3):
-			tileCoorX++;
+			currTile.x++;
 			break;
 		case(0):
-			tileCoorY++;
+			currTile.y++;
 			break;
 		}
 	}
 
-	if (tileCoorX >= map.tilesX || tileCoorX < 0 || tileCoorY >= map.tilesY || tileCoorY < 0) return -1;
-	else return (tileCoorX + tileCoorY * map.tilesX);
+	if (currTile.x >= map.tilesX || currTile.x < 0 || currTile.y >= map.tilesY || currTile.y < 0) return -1;
+	else return (currTile.x + currTile.y * map.tilesX);
 }
 
-bool SeedClass::UseItem(Camera2D& camera, Map& map, int* facingDir) {
-	int tileIndex = TileIndex(camera, map, facingDir, true);
+bool SeedClass::UseItem(Camera2D& camera, Vector2& playerPos, Map& map, int* facingDir) {
+	int tileIndex = TileIndex(camera, playerPos, map, facingDir, true);
 	if (tileIndex == -1 || !map.tiles[tileIndex].isTilled || map.tiles[tileIndex].entity != nullptr) return false;
 
 	currStack--;
@@ -148,8 +153,8 @@ bool SeedClass::UseItem(Camera2D& camera, Map& map, int* facingDir) {
 	
 }
 
-bool HoeClass::UseItem(Camera2D& camera, Map& map, int* facingDir) {		//Hoes,Picks and axes cannot target the player tile.
-	int tileIndex = TileIndex(camera, map, facingDir);
+bool HoeClass::UseItem(Camera2D& camera, Vector2& playerPos, Map& map, int* facingDir) {		//Hoes,Picks and axes cannot target the player tile.
+	int tileIndex = TileIndex(camera, playerPos, map, facingDir);
 	if (tileIndex == -1 || !map.tiles[tileIndex].canBeTilled) return false;
 
 	map.tiles[tileIndex].isTilled = true;
@@ -158,8 +163,8 @@ bool HoeClass::UseItem(Camera2D& camera, Map& map, int* facingDir) {		//Hoes,Pic
 	return true;
 }
 
-bool WateringCanClass::UseItem(Camera2D& camera, Map& map, int* facingDir) {
-	int tileIndex = TileIndex(camera, map, facingDir, true);
+bool WateringCanClass::UseItem(Camera2D& camera, Vector2& playerPos, Map& map, int* facingDir) {
+	int tileIndex = TileIndex(camera, playerPos, map, facingDir, true);
 	if (tileIndex == -1 || !map.tiles[tileIndex].isTilled) return false;
 
 	map.tiles[tileIndex].isWet = true;

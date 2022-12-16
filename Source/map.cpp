@@ -33,6 +33,8 @@ Map::Map(Entity* player) {
 		}
 		else {
 			newTile.groundSource = WATER;
+			collisions.push_back(Rectangle((i % tilesX) * tileSize, (i / tilesY) * tileSize, tileSize, tileSize));
+			std::cout << collisions.back().x << std::endl;
 		}
 
 		tiles.push_back(newTile);

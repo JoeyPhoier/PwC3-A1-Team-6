@@ -1,6 +1,26 @@
 #include "player.h"
 #include "JCC_tools.h"
 
+void Player::GetMoney(int& amount) {
+    currMoney += amount;
+}
+
+void Player::GetPreMoney(int& amount) {
+    preMoney += amount;
+}
+
+void Player::LoseMoney(int& amount) {
+    currMoney -= amount;
+    if (currMoney < 0) currMoney = 0;
+}
+
+void Player::LosePreMoney(int& amount) {
+    preMoney -= amount;
+    if (preMoney < 0) preMoney = 0;
+}
+
+
+
 void Player::Update(Map& map, Camera2D& camera) {
 
     //First the functions that ignore "allowInput".

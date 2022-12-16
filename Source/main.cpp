@@ -71,11 +71,9 @@ int main(void)
     screen.currWidth = screen.windowedWidth;
     screen.currHeight = screen.windowedHeight;
 
-    Image test = LoadImage("assets/test.png");
-    Texture2D groundtexture = LoadTexture("assets/ground.png");
-    Texture2D grid2D = LoadTexture("assets/gridbackground.png");
+    Image icon = LoadImage("assets/items/tools/Hoe.png");
 
-    SetWindowIcon(test);
+    SetWindowIcon(icon);
 
     
 

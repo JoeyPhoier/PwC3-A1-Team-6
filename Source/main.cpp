@@ -48,10 +48,8 @@ public:
 // Module functions declaration
 //----------------------------------------------------------------------------------
 
-//void PlayerUpdate(Player& player, Map& map, Camera2D& camera);
 void CameraUpdate(Camera2D& camera, Player& player, Screen& screen, Map& map);
 void DrawGui(Screen& screen, Player& player);
-//void RenderPlayer(Player& player);
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -133,7 +131,6 @@ int main(void)
 
         map.RenderGround(&camera);
         map.RenderEntities(&camera);
-        //player.Render();
 
         EndMode2D();
 

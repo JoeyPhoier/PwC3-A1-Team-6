@@ -73,8 +73,8 @@ Map::~Map() {
 }
 
 void Map::SortEntities() {
-	size_t numberOfEntities = entities.size();
-	for (size_t i = 1; i < numberOfEntities; ++i) {
+	size_t numberOfEntities = entities.size();               // Using insertion sort because there's not that many entities and
+	for (size_t i = 1; i < numberOfEntities; ++i) {          // the entities are already going to be sorted most of the time
 		for (size_t j = i; j != 0; --j) {
 			if (entities[j]->position.y < entities[j - 1]->position.y) {
 				Entity* temp = entities[j];
@@ -137,7 +137,6 @@ void Map::RenderEntities(Camera2D* camera) {
 	SortEntities();
 	size_t numOfEntities = entities.size();
 	for (size_t i = 0; i < numOfEntities; ++i) {
-		// Should check if it's onscreen
 		entities[i]->Render();
 	}
 }

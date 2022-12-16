@@ -1,7 +1,6 @@
 #include "Inventory.h"
 #include <vector>
-#include <iostream>
-//#include "player.h"						
+#include <iostream>					
 
 enum Direction { Down, Up, Left, Right };
 
@@ -112,7 +111,6 @@ bool Inventory::RemoveItem(int id, int amount) {
 }
 
 int TileIndex(Camera2D& camera, Vector2& playerPos, Map& map, int* facingDir, bool canTargetCurrTile = 0) {
-	//Vector2 currTile{ int((playerPos.x) / (map.tileSize)),int((playerPos.y) / (map.tileSize)) };
 	int currTileX = static_cast<int>(playerPos.x / map.tileSize);
 	int currTileY = static_cast<int>(playerPos.y / map.tileSize);
 	Vector2 mouseCoor = GetScreenToWorld2D(GetMousePosition(), camera);
@@ -123,8 +121,6 @@ int TileIndex(Camera2D& camera, Vector2& playerPos, Map& map, int* facingDir, bo
 
 	int deltax = mouseX - currTileX;
 	int deltay = mouseY - currTileY;
-	//int mouseCoorX = int((GetMouseX() - camera.offset.x + camera.target.x) / (map.tileSize * camera.zoom)) - tileCoorX;
-	//int mouseCoorY = int((GetMouseY() - camera.offset.y + camera.target.y) / (map.tileSize * camera.zoom)) - tileCoorY;
 
 
 	//This copies the way the tools in Stardew valley control;

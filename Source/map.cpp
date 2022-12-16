@@ -50,7 +50,9 @@ Map::Map(Entity* player) {
 			newTile.entity = &beds.back();
 		}
 		else if (preMap[i] == 3) {
+			collisions.push_back(Rectangle(static_cast<float>((i % tilesX) * tileSize - (tileSize*1.2f)), static_cast<float>((i / tilesY) * tileSize), static_cast<float>(tileSize*3.5), static_cast<float>(tileSize)));
 			SellingStall sellStall(&marketStallTexture, Vector2(static_cast<float>((i % tilesX) * tileSize), static_cast<float>((i / tilesY) * tileSize)));
+			sellStall.collisionBox = &collisions.back();
 			marketStalls.push_back(sellStall);
 			entities.push_back(&marketStalls.back());
 
@@ -59,6 +61,7 @@ Map::Map(Entity* player) {
 			newTile.entity = &marketStalls.back();;
 		}
 		else if (preMap[i] >= 4 && preMap[i] <= 7) {
+			collisions.push_back(Rectangle(static_cast<float>((i % tilesX) * tileSize), static_cast<float>((i / tilesY) * tileSize), static_cast<float>(tileSize), static_cast<float>(tileSize)));
 			int seedId = 0;
 			switch (preMap[i]) {
 			case 4:
@@ -75,6 +78,7 @@ Map::Map(Entity* player) {
 				break;
 			}
 			BuyingStall buyStall(&buyingStallTexture, Vector2(static_cast<float>((i % tilesX) * tileSize), static_cast<float>((i / tilesY) * tileSize)), seedId);
+			buyStall.collisionBox = &collisions.back();
 			buyingStalls.push_back(buyStall);
 			entities.push_back(&buyingStalls.back());
 

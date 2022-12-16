@@ -204,7 +204,7 @@ public:
 			202,
 			"Watering Can",
 			&wateringCanSprite,
-			Rectangle(0, 0, 32, 32)
+			Rectangle(0, 0, 40, 40)
 			}
 		}
 		

@@ -28,11 +28,7 @@ Inventory::Inventory() {
 		slot[i] = nullptr;
 	}
 
-	Image tempImage = LoadImage("assets/items/items free.png");
-	ImageResize(&tempImage, 200, 120);
-	vegetableSpriteSheet = LoadTextureFromImage(tempImage);
-	UnloadImage(tempImage);
-	//vegetableSpriteSheet = LoadTexture("assets/items/items free.png");
+	vegetableSpriteSheet = LoadTexture("assets/items/items free.png");
 	hoeSprite = LoadTexture("assets/items/tools/Hoe.png");
 	wateringCanSprite = LoadTexture("assets/items/tools/Watering Can.png");
 }

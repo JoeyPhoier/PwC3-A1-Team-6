@@ -18,16 +18,9 @@ Map::Map(Entity* player) {
 	marketStallTexture = LoadTexture("assets/marketplace_stall.png");
 	//marketStallTexture = LoadTexture("assets/items/carrot.png");
 
-	Image tempImage = LoadImage("assets/plants_free.png");
-	ImageResize(&tempImage, 320, 384);
-	plantSpriteSheet = LoadTextureFromImage(tempImage);
-	UnloadImage(tempImage);
-	//plantSpriteSheet = LoadTexture("assets/plants_free.png");
+	plantSpriteSheet = LoadTexture("assets/plants_free.png");
 
-	tempImage = LoadImage("assets/Basic Furniture.png");
-	ImageResize(&tempImage, 576, 384);
-	furnitureSpriteSheet = LoadTextureFromImage(tempImage);
-	UnloadImage(tempImage);
+	furnitureSpriteSheet = LoadTexture("assets/Basic Furniture.png");
 
 	for (int i = 0; i < tilesX * tilesY; ++i) {
 		Tile newTile;
